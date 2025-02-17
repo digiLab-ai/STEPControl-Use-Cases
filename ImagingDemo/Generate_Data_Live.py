@@ -49,7 +49,7 @@ plasma = example_plasma(
     tstart=0.06999999999,
     tend=0.07,
     dt=(0.07 - 0.06999999999) / Tnum,
-    main_ion="w",
+    main_ion="h",
     impurities=(impurity,),
     load_from_pkl=False,
 )
@@ -70,13 +70,19 @@ dataout = []
 headers = []
 frames = []
 temp_dir = "gif_images//"
-os.mkdir(temp_dir)
+if not os.path.isdir(temp_dir):
+    os.mkdir(temp_dir)
 Rrads = 0
 Zrads = 0
 Rads = []
+Zeffs = []
+
 
 # iterate through plasma states, saving and plotting relevant information
 for i in range(0, len(plasma.t)):
+    Zeffs.append(np.array(plasma.zeff.sel(t=plasma.t[i]).sum("element")))
+    # print(Zeff)
+    # print(np.sum(np.array(plasma.electron_density.sel(t=plasma.t[i]))))
     ion_density_1d = np.sum(np.array(plasma.ion_density.sel(t=plasma.t[i])), axis=0)
     fig, axs = plt.subplots(1, 1)
     radplot = radiation.sel(t=plasma.t[i]).plot(cmap="plasma")
@@ -91,8 +97,8 @@ for i in range(0, len(plasma.t)):
     axs.set_ylim([-0.7, 0.7])
     axs.set_aspect("equal")
     frame_path = "gif_images//" + str(i) + ".png"
-
-    if i % 30 == 0:
+    # save an image every 30th state
+    if i % 50 == 0:
         plt.tight_layout()
         plt.savefig(frame_path, bbox_inches="tight")
         frames.append(imageio.v3.imread(frame_path))
@@ -110,7 +116,6 @@ for file in os.listdir(temp_dir):
 os.rmdir(temp_dir)
 
 
-#
 fancolors = ["#B63B34", "#333333", "#DA3F40", "#1D1D1D", "#F09236", "#000000"]
 fan_num = 0
 colornum = 0
@@ -186,12 +191,24 @@ dataset.createDimension("Z", len(Zrads[:, 0]) - 1)
 dataset.createDimension("state", len(Rads))
 dataset.createDimension("Redgedim", len(Rrads[0]))
 dataset.createDimension("Zedgedim", len(Rrads[0]))
+dataset.createDimension("Rhodim", len(plasma.rho))
 x_var = dataset.createVariable("Redge", "f4", ("Redgedim",))
 y_var = dataset.createVariable("Zedge", "f4", ("Zedgedim",))
+Rho_1d = dataset.createVariable("Rho", "f4", ("Rhodim",))
+ZeffExport = dataset.createVariable(
+    "Zeff",
+    "f4",
+    (
+        "state",
+        "Rhodim",
+    ),
+)
 
 # Assign coordinate values
 x_var[:] = Rrads[0]
 y_var[:] = Zrads[:, 0]
+Rho_1d[:] = np.array(plasma.rho)
+ZeffExport[:] = np.array(Zeffs)
 
 # Create a variable to store the array
 var = dataset.createVariable(
@@ -205,6 +222,7 @@ var[:, :, :] = Rads
 dataset.description = "2D array exported to NetCDF"
 var.units = "Wm^-3"
 # Close the dataset
+print(dataset)
 dataset.close()
 print(f"Saved to {filename}")
 
