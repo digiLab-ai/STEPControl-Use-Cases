@@ -184,7 +184,7 @@ for los_start in los_starts:
 outFolder = "Data//Output//"
 
 # Export plasma state information into a netCDF
-filename = outFolder + "LOS_state_handsOn.nc"
+filename = outFolder + "Imaging_states_handsOn.nc"
 dataset = Dataset(filename, "w", format="NETCDF4")
 dataset.createDimension("R", len(Rrads[0]) - 1)
 dataset.createDimension("Z", len(Zrads[:, 0]) - 1)
@@ -232,7 +232,7 @@ dataout = np.transpose(dataout)
 data_geometry = np.transpose(
     np.array([headers, xlinestarts, xlineends, ylinestarts, ylineends])
 )
-filename = outFolder + "LOS_geometry_handsOn.csv"
+filename = outFolder + "Imaging_geometry_handsOn.csv"
 headers_geometry = ["LOS", "R start (m)", "R end (m)", "Z start", "Z end"]
 # Writing to CSV
 with open(filename, mode="w", newline="") as file:
@@ -248,7 +248,7 @@ print(f"Data successfully exported to {filename}")
 
 
 # File name to save the CSV
-filename = outFolder + "LOS_demo.csv"
+filename = outFolder + "Imaging_measurements_handsOn.csv"
 
 # Writing to CSV
 with open(filename, mode="w", newline="") as file:
