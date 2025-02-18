@@ -100,7 +100,7 @@ for i in range(0, len(plasma.t)):
         radplot.set(clim=[0, 200e3])
         plt.tight_layout()
         plt.title("")
-        plt.savefig(frame_path, bbox_inches="tight", dpi=300)
+        plt.savefig(frame_path, bbox_inches="tight", dpi=200)
         frames.append(imageio.v3.imread(frame_path))
     plt.close()
 

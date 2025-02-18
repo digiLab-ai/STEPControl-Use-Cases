@@ -116,8 +116,11 @@ def example_plasma(
     ti0 = np.linspace(_y0 * 1.1, _y0 * 1.1, nt)
     print(plasma_profiler.profilers)
     _y0 = plasma_profiler.profilers[f"impurity_density:{impurities[0]}"].y0
+    random.seed(10)
     nimp_y0 = _y0 * 2 * np.array(random.sample(list(np.linspace(1, 2, nt * 10)), nt))
+    random.seed(10)
     nimp_peaking = np.array(random.sample(list(np.linspace(1, 2, nt * 10)), nt))
+    random.seed(10)
     nimp_wcenter = np.array(random.sample(list(np.linspace(0.4, 0.1, nt * 10)), nt))
     for i, t in enumerate(plasma.t):
         parameters = {

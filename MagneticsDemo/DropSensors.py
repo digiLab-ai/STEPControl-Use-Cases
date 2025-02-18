@@ -94,11 +94,11 @@ for j in range(6):
             markersize=3,
         )
     axs.set_aspect("equal")
-    axs.set_xlabel("R (m)")
-    axs.set_ylabel("Z (m)")
+    axs.set_xlabel("R [m]")
+    axs.set_ylabel("Z [m]")
     frame_path = "gif_images//" + str(i) + ".png"
     plt.title("# sensors = " + str(len(indices_keptsensors)))
-    plt.savefig(frame_path, bbox_inches="tight", dpi=500)
+    plt.savefig(frame_path, bbox_inches="tight", dpi=200)
     frames.append(imageio.v3.imread(frame_path))
     plt.close()
 output_gif = "animated_plot.gif"
