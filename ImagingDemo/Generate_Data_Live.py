@@ -106,7 +106,7 @@ for i in range(0, len(plasma.t)):
 
 output_gif = "animated_plot.gif"
 imageio.mimsave(
-    "Images//" + output_gif, frames, duration=0.2
+    "Images//" + output_gif, frames, duration=0.4
 )  # Adjust duration as needed
 
 

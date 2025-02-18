@@ -1,0 +1,646 @@
+***************************************************
+MAGNETIC DETECTORS (note the names of the detectors are not used)
+***************************************************
+      94  :total number of detectors            Signal_ID
+              1  :detector:
+amb_ccbv01  
+           1  :number of segments
+           1    0.1803   1.44512    90.0   0.025
+              2  :detector:
+amb_ccbv02  
+           1  :number of segments
+           1    0.1803   1.36887    90.0   0.025
+              3  :detector:
+amb_ccbv03  
+           1  :number of segments
+           1    0.1803   1.29262    90.0   0.025
+              4  :detector:
+amb_ccbv04  
+           1  :number of segments
+           1    0.1803   1.21637    90.0   0.025
+              5  :detector:
+amb_ccbv05  
+           1  :number of segments
+           1    0.1803   1.14012    90.0   0.025
+              6  :detector:
+amb_ccbv06  
+           1  :number of segments
+           1    0.1803   1.06387    90.0   0.025
+              7  :detector:
+amb_ccbv07  
+           1  :number of segments
+           1    0.1803   0.98762    90.0   0.025
+              8  :detector:
+amb_ccbv08  
+           1  :number of segments
+           1    0.1803   0.91137    90.0   0.025
+              9  :detector:
+amb_ccbv09  
+           1  :number of segments
+           1    0.1803   0.83512    90.0   0.025
+             10  :detector:
+amb_ccbv10  
+           1  :number of segments
+           1    0.1803   0.75887    90.0   0.025
+             11  :detector:
+amb_ccbv11  
+           1  :number of segments
+           1    0.1803   0.68262    90.0   0.025
+             12  :detector:
+amb_ccbv12  
+           1  :number of segments
+           1    0.1803   0.60637    90.0   0.025
+             13  :detector:
+amb_ccbv13  
+           1  :number of segments
+           1    0.1803   0.53012    90.0   0.025
+             14  :detector:
+amb_ccbv14  
+           1  :number of segments
+           1    0.1803   0.45387    90.0   0.025
+             15  :detector:
+amb_ccbv15  
+           1  :number of segments
+           1    0.1803   0.37762    90.0   0.025
+             16  :detector:
+amb_ccbv16  
+           1  :number of segments
+           1    0.1803   0.30137    90.0   0.025
+             17  :detector:
+amb_ccbv17  
+           1  :number of segments
+           1    0.1803   0.22512    90.0   0.025
+             18  :detector:
+amb_ccbv18  
+           1  :number of segments
+           1    0.1803   0.14887    90.0   0.025
+             19  :detector:
+amb_ccbv19  
+           1  :number of segments
+           1    0.1803   0.07262    90.0   0.025
+             20  :detector:
+amb_ccbv20  
+           1  :number of segments
+           1    0.1803  -0.00362    90.0   0.025
+             21  :detector:
+amb_ccbv21  
+           1  :number of segments
+           1    0.1803  -0.07625    90.0   0.025
+             22  :detector:
+amb_ccbv22  
+           1  :number of segments
+           1    0.1803  -0.15250    90.0   0.025
+             23  :detector:
+amb_ccbv23  
+           1  :number of segments
+           1    0.1803  -0.22875    90.0   0.025
+             24  :detector:
+amb_ccbv24  
+           1  :number of segments
+           1    0.1803  -0.30500    90.0   0.025
+             25  :detector:
+amb_ccbv25  
+           1  :number of segments
+           1    0.1803  -0.38125    90.0   0.025
+             26  :detector:
+amb_ccbv26  
+           1  :number of segments
+           1    0.1803  -0.45750    90.0   0.025
+             27  :detector:
+amb_ccbv27  
+           1  :number of segments
+           1    0.1803  -0.53375    90.0   0.025
+             28  :detector:
+amb_ccbv28  
+           1  :number of segments
+           1    0.1803  -0.61000    90.0   0.025
+             29  :detector:
+amb_ccbv29  
+           1  :number of segments
+           1    0.1803  -0.68625    90.0   0.025
+             30  :detector:
+amb_ccbv30  
+           1  :number of segments
+           1    0.1803  -0.76250    90.0   0.025
+             31  :detector:
+amb_ccbv31  
+           1  :number of segments
+           1    0.1803  -0.83875    90.0   0.025
+             32  :detector:
+amb_ccbv32  
+           1  :number of segments
+           1    0.1803  -0.91500    90.0   0.025
+             33  :detector:
+amb_ccbv33  
+           1  :number of segments
+           1    0.1803  -0.99125    90.0   0.025
+             34  :detector:
+amb_ccbv34  
+           1  :number of segments
+           1    0.1803  -1.06750    90.0   0.025
+             35  :detector:
+amb_ccbv35  
+           1  :number of segments
+           1    0.1803  -1.14375    90.0   0.025
+             36  :detector:
+amb_ccbv36  
+           1  :number of segments
+           1    0.1803  -1.22000    90.0   0.025
+             37  :detector:
+amb_ccbv37  
+           1  :number of segments
+           1    0.1803  -1.29625    90.0   0.025
+             38  :detector:
+amb_ccbv38  
+           1  :number of segments
+           1    0.1803  -1.37250    90.0   0.025
+             39  :detector:
+amb_ccbv39  
+           1  :number of segments
+           1    0.1803  -1.44875    90.0   0.025
+             40  :detector:
+amb_ccbv40  
+           1  :number of segments
+           1    0.1803  -1.52500    90.0   0.025
+             41  :detector:
+amb_p2ubr1  
+           1  :number of segments
+           1    0.3020   1.42000     0.0   0.035
+             42  :detector:
+amb_p2ubr2  
+           1  :number of segments
+           1    0.3535   1.42000     0.0   0.035
+             43  :detector:
+amb_p2ubr3  
+           1  :number of segments
+           1    0.4050   1.42000     0.0   0.035
+             44  :detector:
+amb_p2ubr4  
+           1  :number of segments
+           1    0.4565   1.42000     0.0   0.035
+             45  :detector:
+amb_p2ubr5  
+           1  :number of segments
+           1    0.5575   1.42000     0.0   0.035
+             46  :detector:
+amb_p2ubr6  
+           1  :number of segments
+           1    0.6090   1.42000     0.0   0.035
+             47  :detector:
+amb_p2ubr7  
+           1  :number of segments
+           1    0.6615   1.42000     0.0   0.035
+             48  :detector:
+amb_p2ubr8  
+           1  :number of segments
+           1    0.7120   1.42000     0.0   0.035
+             49  :detector:
+amb_p2lbr1  
+           1  :number of segments
+           1    0.3020   1.43000     0.0   0.035
+             50  :detector:
+amb_p2lbr2  
+           1  :number of segments
+           1    0.3535   1.43000     0.0   0.035
+             51  :detector:
+amb_p2lbr3  
+           1  :number of segments
+           1    0.4050   1.43000     0.0   0.035
+             52  :detector:
+amb_p2lbr4  
+           1  :number of segments
+           1    0.4565   1.43000     0.0   0.035
+             53  :detector:
+amb_p2lbr5  
+           1  :number of segments
+           1    0.5575   1.43000     0.0   0.035
+             54  :detector:
+amb_p2lbr6  
+           1  :number of segments
+           1    0.6090   1.43000     0.0   0.035
+             55  :detector:
+amb_p2lbr7  
+           1  :number of segments
+           1    0.6615   1.43000     0.0   0.035
+             56  :detector:
+amb_p2lbr8  
+           1  :number of segments
+           1    0.7120   1.43000     0.0   0.035
+             57  :detector:
+amb_obv01   
+           1  :number of segments
+           1    1.4420   1.33070    90.0   0.010
+             58  :detector:
+amb_obv02   
+           1  :number of segments
+           1    1.4420   1.25570    90.0   0.010
+             59  :detector:
+amb_obv03   
+           1  :number of segments
+           1    1.5897   0.80180    90.0   0.010
+             60  :detector:
+amb_obv04   
+           1  :number of segments
+           1    1.5897   0.72680    90.0   0.010
+             61  :detector:
+amb_obv05   
+           1  :number of segments
+           1    1.5897   0.65180    90.0   0.010
+             62  :detector:
+amb_obv06   
+           1  :number of segments
+           1    1.8449   0.30400    90.0   0.010
+             63  :detector:
+amb_obv07   
+           1  :number of segments
+           1    1.8449   0.22900    90.0   0.010
+             64  :detector:
+amb_obv08   
+           1  :number of segments
+           1    1.8449   0.15400    90.0   0.010
+             65  :detector:
+amb_obv09   
+           1  :number of segments
+           1    1.8449   0.07900    90.0   0.010
+             66  :detector:
+amb_obv10   
+           1  :number of segments
+           1    1.8449   0.00400    90.0   0.010
+             67  :detector:
+amb_obv11   
+           1  :number of segments
+           1    1.8449  -0.07100    90.0   0.010
+             68  :detector:
+amb_obv12   
+           1  :number of segments
+           1    1.8449  -0.14600    90.0   0.010
+             69  :detector:
+amb_obv13   
+           1  :number of segments
+           1    1.8449  -0.22100    90.0   0.010
+             70  :detector:
+amb_obv14   
+           1  :number of segments
+           1    1.8449  -0.29600    90.0   0.010
+             71  :detector:
+amb_obv15   
+           1  :number of segments
+           1    1.5913  -0.64530    90.0   0.010
+             72  :detector:
+amb_obv16   
+           1  :number of segments
+           1    1.5913  -0.72030    90.0   0.010
+             73  :detector:
+amb_obv17   
+           1  :number of segments
+           1    1.5913  -0.79530    90.0   0.010
+             74  :detector:
+amb_obv18   
+           1  :number of segments
+           1    1.4401  -1.24760    90.0   0.010
+             75  :detector:
+amb_obv19   
+           1  :number of segments
+           1    1.4401  -1.32260    90.0   0.010
+             76  :detector:
+amb_obr01   
+           1  :number of segments
+           1    1.4420   1.33070     0.0   0.010
+             77  :detector:
+amb_obr02   
+           1  :number of segments
+           1    1.4420   1.25570     0.0   0.010
+             78  :detector:
+amb_obr03   
+           1  :number of segments
+           1    1.5897   0.80180     0.0   0.010
+             79  :detector:
+amb_obr04   
+           1  :number of segments
+           1    1.5897   0.72680     0.0   0.010
+             80  :detector:
+amb_obr05   
+           1  :number of segments
+           1    1.5897   0.65180     0.0   0.010
+             81  :detector:
+amb_obr06   
+           1  :number of segments
+           1    1.8449   0.30400     0.0   0.010
+             82  :detector:
+amb_obr07   
+           1  :number of segments
+           1    1.8449   0.22900     0.0   0.010
+             83  :detector:
+amb_obr08   
+           1  :number of segments
+           1    1.8449   0.15400     0.0   0.010
+             84  :detector:
+amb_obr09   
+           1  :number of segments
+           1    1.8449   0.07900     0.0   0.010
+             85  :detector:
+amb_obr10   
+           1  :number of segments
+           1    1.8449   0.00400     0.0   0.010
+             86  :detector:
+amb_obr11   
+           1  :number of segments
+           1    1.8449  -0.07100     0.0   0.010
+             87  :detector:
+amb_obr12   
+           1  :number of segments
+           1    1.8449  -0.14600     0.0   0.010
+             88  :detector:
+amb_obr13   
+           1  :number of segments
+           1    1.8449  -0.22100     0.0   0.010
+             89  :detector:
+amb_obr14   
+           1  :number of segments
+           1    1.8449  -0.29600     0.0   0.010
+             90  :detector:
+amb_obr15   
+           1  :number of segments
+           1    1.5913  -0.64530     0.0   0.010
+             91  :detector:
+amb_obr16   
+           1  :number of segments
+           1    1.5913  -0.72030     0.0   0.010
+             92  :detector:
+amb_obr17   
+           1  :number of segments
+           1    1.5913  -0.79530     0.0   0.010
+             93  :detector:
+amb_obr18   
+           1  :number of segments
+           1    1.4401  -1.24760     0.0   0.010
+             94  :detector:
+amb_obr19   
+           1  :number of segments
+           1    1.4401  -1.32260     0.0   0.010
+***************************************************
+SADDLE/FLUX LOOPS (note the names of the detectors are not used)
+***************************************************
+          48  :total number of detectors            Signal_ID
+              1  :detector:
+amb_fl/cc01 
+           1  :number of segments
+           1    0.1785   1.23490      6.283185307180
+              2  :detector:
+amb_fl/cc02 
+           1  :number of segments
+           1    0.1785   0.92990      6.283185307180
+              3  :detector:
+amb_fl/cc03 
+           1  :number of segments
+           1    0.1785   0.62490      6.283185307180
+              4  :detector:
+amb_fl/cc04 
+           1  :number of segments
+           1    0.1785   0.31990      6.283185307180
+              5  :detector:
+amb_fl/cc05 
+           1  :number of segments
+           1    0.1785   0.01490      6.283185307180
+              6  :detector:
+amb_fl/cc06 
+           1  :number of segments
+           1    0.1785  -0.01810      6.283185307180
+              7  :detector:
+amb_fl/cc07 
+           1  :number of segments
+           1    0.1785  -0.32310      6.283185307180
+              8  :detector:
+amb_fl/cc08 
+           1  :number of segments
+           1    0.1785  -0.62810      6.283185307180
+              9  :detector:
+amb_fl/cc09 
+           1  :number of segments
+           1    0.1785  -0.93310      6.283185307180
+             10  :detector:
+amb_fl/cc10 
+           1  :number of segments
+           1    0.1785  -1.23810      6.283185307180
+             11  :detector:
+amb_fl/p2u/1
+           1  :number of segments
+           1    0.2600   1.47184      6.283185307180
+             12  :detector:
+amb_fl/p2u/2
+           1  :number of segments
+           1    0.3750   1.47184      6.283185307180
+             13  :detector:
+amb_fl/p2u/3
+           1  :number of segments
+           1    0.5050   1.47184      6.283185307180
+             14  :detector:
+amb_fl/p2u/4
+           1  :number of segments
+           1    0.6250   1.47184      6.283185307180
+             15  :detector:
+amb_fl/p2u/5
+           1  :number of segments
+           1    0.7100   1.47184      6.283185307180
+             16  :detector:
+amb_fl/p3u/1
+           1  :number of segments
+           1    1.1630   1.08259      6.283185307180
+             17  :detector:
+amb_fl/p3u/2
+           1  :number of segments
+           1    1.1630   1.09759      6.283185307180
+             18  :detector:
+amb_fl/p3u/3
+           1  :number of segments
+           1    1.0354   1.09759      6.283185307180
+             19  :detector:
+amb_fl/p3u/4
+           1  :number of segments
+           1    1.0354   1.08309      6.283185307180
+             20  :detector:
+amb_fl/p4u/1
+           1  :number of segments
+           1    1.5930   1.04079      6.283185307180
+             21  :detector:
+amb_fl/p4u/2
+           1  :number of segments
+           1    1.5930   1.05579      6.283185307180
+             22  :detector:
+amb_fl/p4u/3
+           1  :number of segments
+           1    1.4001   1.16579      6.283185307180
+             23  :detector:
+amb_fl/p4u/4
+           1  :number of segments
+           1    1.4001   1.15079      6.283185307180
+             24  :detector:
+amb_fl/p5u/1
+           1  :number of segments
+           1    1.7493   0.44221      6.283185307180
+             25  :detector:
+amb_fl/p5u/2
+           1  :number of segments
+           1    1.7493   0.45721      6.283185307180
+             26  :detector:
+amb_fl/p5u/3
+           1  :number of segments
+           1    1.5458   0.56420      6.283185307180
+             27  :detector:
+amb_fl/p5u/4
+           1  :number of segments
+           1    1.5458   0.54920      6.283185307180
+             28  :detector:
+amb_fl/p6u/1
+           1  :number of segments
+           1    1.4025   0.88900      6.283185307180
+             29  :detector:
+amb_fl/p6u/2
+           1  :number of segments
+           1    1.4025   0.90400      6.283185307180
+             30  :detector:
+amb_fl/p2l/1
+           1  :number of segments
+           1    0.2600  -1.48016      6.283185307180
+             31  :detector:
+amb_fl/p2l/2
+           1  :number of segments
+           1    0.3750  -1.48016      6.283185307180
+             32  :detector:
+amb_fl/p2l/3
+           1  :number of segments
+           1    0.5050  -1.48016      6.283185307180
+             33  :detector:
+amb_fl/p2l/4
+           1  :number of segments
+           1    0.6250  -1.48016      6.283185307180
+             34  :detector:
+amb_fl/p2l/5
+           1  :number of segments
+           1    0.7100  -1.48016      6.283185307180
+             35  :detector:
+amb_fl/p3l/1
+           1  :number of segments
+           1    1.1630  -1.08860      6.283185307180
+             36  :detector:
+amb_fl/p3l/2
+           1  :number of segments
+           1    1.1630  -1.10360      6.283185307180
+             37  :detector:
+amb_fl/p3l/3
+           1  :number of segments
+           1    1.0354  -1.10360      6.283185307180
+             38  :detector:
+amb_fl/p3l/4
+           1  :number of segments
+           1    1.0354  -1.08860      6.283185307180
+             39  :detector:
+amb_fl/p4l/1
+           1  :number of segments
+           1    1.5984  -1.04443      6.283185307180
+             40  :detector:
+amb_fl/p4l/2
+           1  :number of segments
+           1    1.5984  -1.06943      6.283185307180
+             41  :detector:
+amb_fl/p4l/3
+           1  :number of segments
+           1    1.4005  -1.15943      6.283185307180
+             42  :detector:
+amb_fl/p4l/4
+           1  :number of segments
+           1    1.4005  -1.14403      6.283185307180
+             43  :detector:
+amb_fl/p5l/1
+           1  :number of segments
+           1    1.7463  -0.44224      6.283185307180
+             44  :detector:
+amb_fl/p5l/2
+           1  :number of segments
+           1    1.7463  -0.45724      6.283185307180
+             45  :detector:
+amb_fl/p5l/3
+           1  :number of segments
+           1    1.7463  -0.53224      6.283185307180
+             46  :detector:
+amb_fl/p5l/4
+           1  :number of segments
+           1    1.5495  -0.54724      6.283185307180
+             47  :detector:
+amb_fl/p6l/1
+           1  :number of segments
+           1    1.4025  -0.88760      6.283185307180
+             48  :detector:
+amb_fl/p6l/2
+           1  :number of segments
+           1    1.4025  -0.90260      6.283185307180
+**************************************************************************
+ CURRENT DETECTORS
+**************************************************************************
+       21   : total no. of detectors
+        1   : detector :
+AMC_Plasma Current                                       
+         -            -              330.0		 
+AMC_Plasma Current                                       
+         -            -              330.0		 
+AMC_Plasma Current                                       
+         -            -              330.0		 
+AMC_Plasma Current                                       
+         -            -              330.0		 
+AMC_Plasma Current                                       
+         -            -              270.0		 
+AMC_Plasma Current                                       
+         -            -              270.0		 
+AMC_Plasma Current                                       
+         -            -              270.0		 
+AMC_Plasma Current                                       
+         -            -              270.0		 
+AMC_TF Current                                           
+         -            -                -		 
+AMC_Sol Current                                          
+         -            -                -		 
+AMC_EFPS Current                                         
+         -            -                -		 
+AMC_P2u Current                                          
+       0.5000         1.66900        330.0		 
+AMC_P2u Current                                          
+       0.5000         1.69900        150.0		 
+AMC_P3u Current                                          
+       1.1002         1.10360        330.0		 
+AMC_P3u Current                                          
+       1.1002         1.10360        150.0		 
+AMC_P4u Current                                          
+       1.4949         1.10090        360.0		 
+AMC_P4u Current                                          
+       1.4949         1.10090        180.0		 
+AMC_P5u Current                                          
+       1.6416         0.50420        360.0		 
+AMC_P5u Current                                          
+       1.6416         0.50420        180.0		 
+AMC_P6u Current                                          
+       1.4382         0.89450        360.0		 
+AMC_P6u Current                                          
+       1.4382         0.89450        180.0		 
+AMC_P2l Current                                          
+       0.4998        -1.65120        330.0		 
+AMC_P2l Current                                          
+       0.4998        -1.65120        150.0		 
+AMC_P3l Current                                          
+       1.1000        -1.09960        330.0		 
+AMC_P3l Current                                          
+       1.1000        -1.09960        150.0		 
+AMC_P4l Current                                          
+       1.4681        -1.10900        360.0		 
+AMC_P4l Current                                          
+       1.4681        -1.10900        180.0		 
+AMC_P5l Current                                          
+       1.6403        -0.50530        360.0		 
+AMC_P5l Current                                          
+       1.6403        -0.50530        180.0		 
+AMC_P6l Current                                          
+       1.4367        -0.89510        360.0		 
+AMC_P6l Current                                          
+       1.4367        -0.89510        180.0
+
+    
+
