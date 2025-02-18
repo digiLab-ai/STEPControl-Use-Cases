@@ -81,8 +81,6 @@ Zeffs = []
 # iterate through plasma states, saving and plotting relevant information
 for i in range(0, len(plasma.t)):
     Zeffs.append(np.array(plasma.zeff.sel(t=plasma.t[i]).sum("element")))
-    # print(Zeff)
-    # print(np.sum(np.array(plasma.electron_density.sel(t=plasma.t[i]))))
     ion_density_1d = np.sum(np.array(plasma.ion_density.sel(t=plasma.t[i])), axis=0)
     fig, axs = plt.subplots(1, 1)
     radplot = radiation.sel(t=plasma.t[i]).plot(cmap="plasma")
@@ -99,14 +97,19 @@ for i in range(0, len(plasma.t)):
     frame_path = "gif_images//" + str(i) + ".png"
     # save an image every 30th state
     if i % 50 == 0:
+        radplot.set(clim=[0, 200e3])
         plt.tight_layout()
-        plt.savefig(frame_path, bbox_inches="tight")
+        plt.title("")
+        plt.savefig(frame_path, bbox_inches="tight", dpi=300)
         frames.append(imageio.v3.imread(frame_path))
     plt.close()
 
 output_gif = "animated_plot.gif"
 imageio.mimsave(
-    "Images//" + output_gif, frames, duration=0.4
+    "Images//" + output_gif,
+    frames,
+    duration=0.4,
+    loop=0,
 )  # Adjust duration as needed
 
 
@@ -116,7 +119,6 @@ for file in os.listdir(temp_dir):
 os.rmdir(temp_dir)
 
 
-fancolors = ["#B63B34", "#333333", "#DA3F40", "#1D1D1D", "#F09236", "#000000"]
 fan_num = 0
 colornum = 0
 xlinestarts = []
@@ -164,7 +166,6 @@ for los_start in los_starts:
             ylineends.append(yline[1])
         for diagnosticType in diagnosticTypes:
             colornum += 1
-            # plt.plot([originx,directionx],[originz,directionz])
             data_config = return_readings(
                 plot=0,
                 plasma=plasma,
@@ -247,7 +248,7 @@ with open(filename, mode="w", newline="") as file:
 print(f"Data successfully exported to {filename}")
 
 
-# File name to save the CSV
+# Export measurements into a CSV
 filename = outFolder + "Imaging_measurements_handsOn.csv"
 
 # Writing to CSV
