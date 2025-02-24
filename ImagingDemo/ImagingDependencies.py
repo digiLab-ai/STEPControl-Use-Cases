@@ -116,12 +116,25 @@ def example_plasma(
     ti0 = np.linspace(_y0 * 1.1, _y0 * 1.1, nt)
     print(plasma_profiler.profilers)
     _y0 = plasma_profiler.profilers[f"impurity_density:{impurities[0]}"].y0
-    random.seed(10)
-    nimp_y0 = _y0 * 2 * np.array(random.sample(list(np.linspace(1, 2, nt * 10)), nt))
-    random.seed(20)
-    nimp_peaking = np.array(random.sample(list(np.linspace(1, 2, nt * 10)), nt))
-    random.seed(30)
-    nimp_wcenter = np.array(random.sample(list(np.linspace(0.4, 0.1, nt * 10)), nt))
+    impnum = 10
+    nimp_y0 = {}
+    nimp_peaking = {}
+    nimp_wcenter = {}
+    for impurity in impurities:
+        random.seed(impnum)
+        nimp_y0[impurity] = (
+            _y0 * 2 * np.array(random.sample(list(np.linspace(1, 2, nt * 10)), nt))
+        )
+        random.seed(impnum * 2)
+        nimp_peaking[impurity] = np.array(
+            random.sample(list(np.linspace(1, 2, nt * 10)), nt)
+        )
+        random.seed(impnum * 3)
+        nimp_wcenter[impurity] = np.array(
+            random.sample(list(np.linspace(0.4, 0.1, nt * 10)), nt)
+        )
+
+        impnum += 100
     for i, t in enumerate(plasma.t):
         parameters = {
             "electron_temperature.peaking": te_peaking[i],
@@ -130,11 +143,16 @@ def example_plasma(
             "toroidal_rotation.peaking": vrot_peaking[i],
             "toroidal_rotation.y0": vrot0[i],
             "electron_density.peaking": ne_peaking[i],
-            "impurity_density:ar.peaking": nimp_peaking[i],
-            "impurity_density:ar.y0": nimp_y0[i],
-            "impurity_density:ar.wcenter": nimp_wcenter[i],
         }
+        for impurity in impurities:
 
+            parameters["impurity_density:" + impurity + ".peaking"] = nimp_peaking[
+                impurity
+            ][i]
+            parameters["impurity_density:" + impurity + ".y0"] = nimp_y0[impurity][i]
+            parameters["impurity_density:" + impurity + ".wcenter"] = nimp_wcenter[
+                impurity
+            ][i]
         plasma_profiler(parameters=parameters, t=t)
 
     return plasma
@@ -187,7 +205,10 @@ def return_readings(
 ):
     equilibrium = load_default_objects("st40", "equilibrium")
     model = diagnosticType
-    transform.set_equilibrium(equilibrium)
+    try:
+        transform.set_equilibrium(equilibrium)
+    except:
+        print("equilibrium already set")
     model = model(instrument)
     model.set_transform(transform)
     model.set_plasma(plasma)
