@@ -59,7 +59,7 @@ class LOSPlotter:
         self.values = sensor_df.values
         self.n_rows = len(self.values)
         self.norm = plt.Normalize(self.values.min(), self.values.max())
-        self.cmap = plt.cm.viridis
+        self.cmap = plt.cm.plasma
 
         self.origin_R = self.geometry_df["R start (m)"]
         self.origin_z = self.geometry_df["Z start"]
@@ -176,7 +176,7 @@ class LOSPlotter:
             sm = plt.cm.ScalarMappable(cmap=self.cmap, norm=self.norm)
             sm.set_array([])
             cbar = plt.colorbar(sm, cax=cax_right, orientation="vertical")
-            cbar.set_label("Sensor (XRCS) Measurement")
+            cbar.set_label("Sensor (XRCS) Measurement [Wm$^{-2}$]")
             cbar.ax.yaxis.set_major_formatter(ticker.ScalarFormatter(useMathText=True))
             cbar.ax.ticklabel_format(style="sci", axis="y", scilimits=(5, 5))
 
@@ -186,14 +186,14 @@ class LOSPlotter:
             cbar = plt.colorbar(im, cax=cax_left, orientation="vertical")
             cbar.ax.yaxis.set_ticks_position("left")
             cbar.ax.yaxis.set_label_position("left")
-            cbar.set_label("Plasma State (Emissivity)")
+            cbar.set_label("Plasma State [Wm$^{-3}$]")
             cbar.ax.yaxis.set_major_formatter(ticker.ScalarFormatter(useMathText=True))
             cbar.ax.ticklabel_format(style="sci", axis="y", scilimits=(5, 5))
 
             ax.set_xlim(-1.0, 1)
             # ax.set_ylim(-0.8, 1.0)
 
-            ax_right.set_ylabel("Height (m)")
+            ax_right.set_ylabel("Height [m]")
             ax_right.set_ylim(
                 ax.get_ylim()
             )  # Ensure the right axis matches the main plot's y-range
@@ -201,8 +201,8 @@ class LOSPlotter:
             ax_right.yaxis.set_ticks_position("right")
 
             ax.set_aspect("equal")
-            ax.set_xlabel("Major Radius (m)")
-            ax.set_ylabel("Height (m)")
+            ax.set_xlabel("Major Radius [m]")
+            ax.set_ylabel("Height [m]")
             ax.legend(ncol=2, loc="upper center")
             plt.subplots_adjust(wspace=1)
             ax.set_aspect(1.0)
