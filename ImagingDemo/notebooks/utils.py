@@ -53,7 +53,8 @@ class LOSPlotter:
         self.plasma_states, self.plasma_coords = self.interpret_state_nc(
             plasma_nc_filename
         )
-        self.z_eff = self.qoi_df['Z_eff_ave']
+        self.z_eff_ave = self.qoi_df['Z_eff_ave']
+        self.z_eff_max = self.qoi_df['Z_eff_max']
 
         self.values = sensor_df.values
         self.n_rows = len(self.values)
@@ -94,7 +95,7 @@ class LOSPlotter:
 
             # Create figure with GridSpec to control layout
             fig, axs = plt.subplots(
-                1, 3, figsize=(10, 6), gridspec_kw={"width_ratios": [0.05, 1, 0.05]}
+                1, 3, figsize=(10, 6), gridspec_kw={"width_ratios": [0.05, 1, 0.05]}, dpi=300
             )
 
             # Extract the axes
@@ -128,7 +129,15 @@ class LOSPlotter:
             ax.text(
                 -0.6,
                 0.6,
-                "$\\langle Z_{\\mathrm{eff.}} \\rangle$ = " + f"{self.z_eff[run]:.1f}",
+                "$\\langle Z_{\\mathrm{eff.}} \\rangle$ = " + f"{self.z_eff_ave[run]:.1f}",
+                fontsize=12,
+                ha="center",
+                va="center",
+            )
+            ax.text(
+                -0.6,
+                -0.6,
+                "$Z_{\\mathrm{eff., max}}$ = " + f"{self.z_eff_max[run]:.1f}",
                 fontsize=12,
                 ha="center",
                 va="center",
@@ -220,7 +229,6 @@ class LOSPlotter:
             disabled=False,
             repeat=True
         )
-        play.play()
         # Link the play button to the slider
         jslink((play, 'value'), (slider, 'value'))
         controls = HBox([play, slider])
@@ -275,7 +283,6 @@ class LOSPlotter:
             disabled=False,
             repeat=True
         )
-        play.play()
         # Link the play button to the slider
         jslink((play, 'value'), (slider, 'value'))
         controls = HBox([play, slider])
