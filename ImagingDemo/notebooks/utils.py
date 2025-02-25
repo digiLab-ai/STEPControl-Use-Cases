@@ -1,4 +1,5 @@
-from ipywidgets import IntSlider, Output, interact, SelectMultiple, fixed
+
+from ipywidgets import IntSlider, Output, interact, interactive_output, SelectMultiple, fixed, Checkbox, VBox, HBox, Combobox, HTML, Play, jslink
 from IPython.display import display
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
@@ -38,18 +39,24 @@ class LOSPlotter:
     def __init__(
         self,
         sensor_df,
+        qoi_df=None,
         geometry_df=None,
         plasma_nc_filename="Imaging_states_handsOn.nc",
     ):
         self.sensor_df = sensor_df
+        if qoi_df is None:
+            qoi_df = pd.read_csv("qoi.csv")
+        self.qoi_df = qoi_df
         if geometry_df is None:
             geometry_df = pd.read_csv("Imaging_geometry_handsOn.csv")
         self.geometry_df = geometry_df
-        self.plasma_states, self.plasma_coords, self.z_eff = self.interpret_state_nc(
+        self.plasma_states, self.plasma_coords = self.interpret_state_nc(
             plasma_nc_filename
         )
+        self.z_eff = self.qoi_df['Z_eff_ave']
 
-        self.values = self.sensor_df.values
+        self.values = sensor_df.values
+        self.n_rows = len(self.values)
         self.norm = plt.Normalize(self.values.min(), self.values.max())
         self.cmap = plt.cm.viridis
 
@@ -72,8 +79,13 @@ class LOSPlotter:
     def __call__(self):
         self.display_interactive_plot()
 
-    def plot_los(self, run, selected_lines=None, print_str=None):
+    def plot_los(self, selected_lines=None, run=0, print_str=None, **kwargs):
+        if selected_lines is None:
+            selected_lines = [k for k, v in kwargs.items() if v]
+
         selected_inds = [self.sensor_df.columns.get_loc(col) for col in selected_lines]
+
+
         num_lines = len(selected_inds)
         self.colours = self.cmap(self.norm(self.values[run]))
 
@@ -100,12 +112,13 @@ class LOSPlotter:
                 )
 
             # Determine indices for labeling (first, middle, last)
-            label_indices = [0, num_lines // 2, num_lines - 1]
-            for i in [selected_inds[i] for i in label_indices]:
+            label_indices = [0, num_lines // 2, num_lines - 1][:num_lines]
+            for i, j in enumerate([selected_inds[i] for i in label_indices]):
+                sf = 0.05 + (i/len(label_indices)) * 0.1
                 ax.text(
-                    self.end_R[i] + 0.05 * (self.end_R[i] - self.origin_R[i]),
-                    self.end_z[i] + 0.05 * (self.end_z[i] - self.origin_R[i]),
-                    self.sensor_df.columns[i],
+                    self.end_R[j] + sf * (self.end_R[j] - self.origin_R[j]),
+                    self.end_z[j] + sf * (self.end_z[j] - self.origin_R[j]),
+                    self.sensor_df.columns[j],
                     fontsize=8,
                     ha="right",
                     va="center",
@@ -164,12 +177,12 @@ class LOSPlotter:
             cbar = plt.colorbar(im, cax=cax_left, orientation="vertical")
             cbar.ax.yaxis.set_ticks_position("left")
             cbar.ax.yaxis.set_label_position("left")
-            cbar.set_label("Plasma State")
+            cbar.set_label("Plasma State (Emissivity)")
             cbar.ax.yaxis.set_major_formatter(ticker.ScalarFormatter(useMathText=True))
             cbar.ax.ticklabel_format(style="sci", axis="y", scilimits=(5, 5))
 
             ax.set_xlim(-1.0, 1)
-            ax.set_ylim(-0.8, 1.0)
+            # ax.set_ylim(-0.8, 1.0)
 
             ax_right.set_ylabel("Height (m)")
             ax_right.set_ylim(
@@ -191,38 +204,76 @@ class LOSPlotter:
             plt.show()
             plt.close()
 
-    def display_plot(self, selected_lines=None, print_str=None):
+    def display_plot(self, selected_lines=None):
         if selected_lines is None:
             selected_lines = list(self.sensor_df.columns)
         slider = IntSlider(
             min=0, max=len(self.sensor_df) - 1, step=1, value=0, continuous_update=True
         )
-        interact(
-            self.plot_los,
-            run=slider,
-            selected_lines=fixed(selected_lines),
-            print_str=fixed(print_str),
+        play = Play(
+            interval=100,
+            value=0,
+            min=0,
+            max=self.n_rows-1,
+            step=1,
+            description="Press play",
+            disabled=False
         )
-        display(self.output)
+        # Link the play button to the slider
+        jslink((play, 'value'), (slider, 'value'))
+        controls = HBox([play, slider])
+
+        # Make the interactive plot link and return
+        out = interactive_output(self.plot_los, {'run': slider, 'selected_lines': fixed(selected_lines)})
+
+        # Display the combined controls and the output
+        display(VBox([controls, out]))
+
+        return self.output
 
     def display_interactive_plot(self):
         column_names = list(self.sensor_df.columns)
-        multi_select = SelectMultiple(
-            options=column_names,
-            description="Click while holding shift to select 3 lines of sight:",
-            rows=len(column_names) // 5,
-            value=column_names[:3],
-        )
+        checkboxes = {
+            option: Checkbox(
+                description=option,
+                value=False,
+                # layout=widgets.Layout(width=width)  # Fixed width per checkbox
+            )
+            for option in column_names
+        }
+        row_size = 5
+        rows = [
+            HBox(
+                list(checkboxes.values())[i:i+row_size],
+                width="80px"
+            )
+            for i in range(0, len(column_names), row_size)
+        ]
+
+        checkbox_container = VBox(rows)
+
         slider = IntSlider(
             min=0, max=len(self.sensor_df) - 1, step=1, value=0, continuous_update=True
         )
-        interact(
-            self.plot_los,
-            run=slider,
-            selected_lines=multi_select,
-            print_str=fixed(None),
+        play = Play(
+
+            interval=100,
+            value=0,
+            min=0,
+            max=self.n_rows-1,
+            step=1,
+            description="Press play",
+            disabled=False
         )
-        display(self.output)
+        # Link the play button to the slider
+        jslink((play, 'value'), (slider, 'value'))
+        controls = HBox([play, slider])
+
+        out = interactive_output(self.plot_los, {'run': slider, 'print_str': fixed(None), **checkboxes})
+
+        # Display the combined controls and the output
+        display(VBox([checkbox_container, controls, out]))
+        return self.output
 
     def interpret_state_nc(self, state_nc_fn, z_lim=(-0.7, 0.7)):
         with h5py.File(state_nc_fn, "r") as nc_file:
@@ -233,11 +284,4 @@ class LOSPlotter:
             valid_z = (state_coords[1] >= z_lim[0]) & (state_coords[1] <= z_lim[1])
             state_coords = state_coords[0], state_coords[1][valid_z]
             states = states[:, valid_z, :]
-            z_eff = nc_file["Zeff"][:]
-            rho = nc_file["Rho"][:]
-            ave_z_eff = self.calc_expected_z_eff(rho, z_eff)
-        return states, state_coords, ave_z_eff
-
-    def calc_expected_z_eff(self, rho, z_eff):
-        # return np.trapezoid(z_eff, rho, axis=1) / np.trapezoid(np.ones_like(rho), rho)
-        return np.trapz(z_eff, rho, axis=1) / np.trapz(np.ones_like(rho), rho)
+        return states, state_coords
