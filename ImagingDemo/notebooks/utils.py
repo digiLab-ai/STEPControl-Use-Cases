@@ -95,7 +95,7 @@ class LOSPlotter:
 
             # Create figure with GridSpec to control layout
             fig, axs = plt.subplots(
-                1, 3, figsize=(10, 6), gridspec_kw={"width_ratios": [0.05, 1, 0.05]}, dpi=300
+                1, 3, figsize=(10, 6), gridspec_kw={"width_ratios": [0.05, 1, 0.05]}, dpi=150
             )
 
             # Extract the axes
