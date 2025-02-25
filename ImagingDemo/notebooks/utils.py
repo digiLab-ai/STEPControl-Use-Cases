@@ -211,13 +211,14 @@ class LOSPlotter:
             min=0, max=len(self.sensor_df) - 1, step=1, value=0, continuous_update=True
         )
         play = Play(
-            interval=100,
+            interval=50,
             value=0,
             min=0,
             max=self.n_rows-1,
             step=1,
             description="Press play",
-            disabled=False
+            disabled=False,
+            repeat=True
         )
         # Link the play button to the slider
         jslink((play, 'value'), (slider, 'value'))
@@ -264,13 +265,14 @@ class LOSPlotter:
         )
         play = Play(
 
-            interval=100,
+            interval=50,
             value=0,
             min=0,
             max=self.n_rows-1,
             step=1,
             description="Press play",
-            disabled=False
+            disabled=False,
+            repeat=True
         )
         # Link the play button to the slider
         jslink((play, 'value'), (slider, 'value'))
