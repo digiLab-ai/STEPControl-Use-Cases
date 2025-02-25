@@ -1,4 +1,3 @@
-# @title Click ▶️ to import packages
 from itertools import combinations
 from typing import Optional, Union
 import warnings
@@ -21,11 +20,14 @@ import seaborn as sns
 
 
 def enable_plotly_in_cell():
-    display(
-        IPython.core.display.HTML(
+    IPython.core.display.HTML(
             """<script src="/static/components/requirejs/require.js"></script>"""
         )
-    )
+    # display(
+    #     IPython.core.display.HTML(
+    #         """<script src="/static/components/requirejs/require.js"></script>"""
+    #     )
+    # )
     init_notebook_mode(connected=False)
 
 
