@@ -220,6 +220,7 @@ class LOSPlotter:
             disabled=False,
             repeat=True
         )
+        play.play()
         # Link the play button to the slider
         jslink((play, 'value'), (slider, 'value'))
         controls = HBox([play, slider])
@@ -274,6 +275,7 @@ class LOSPlotter:
             disabled=False,
             repeat=True
         )
+        play.play()
         # Link the play button to the slider
         jslink((play, 'value'), (slider, 'value'))
         controls = HBox([play, slider])
