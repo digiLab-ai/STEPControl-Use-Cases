@@ -231,12 +231,19 @@ class LOSPlotter:
 
         return self.output
 
-    def display_interactive_plot(self):
+    def display_interactive_plot(self, lines_of_sight=None):
         column_names = list(self.sensor_df.columns)
+        if lines_of_sight is None:
+            # Default to first 3
+            lines_of_sight = [0, 1, 2]
+        if isinstance(lines_of_sight[0], int):
+            # It is an index list rather than specific reference to column_names
+            lines_of_sight = [column_names[i] for i in lines_of_sight]
+        
         checkboxes = {
             option: Checkbox(
                 description=option,
-                value=False,
+                value=option in lines_of_sight,
                 # layout=widgets.Layout(width=width)  # Fixed width per checkbox
             )
             for option in column_names
