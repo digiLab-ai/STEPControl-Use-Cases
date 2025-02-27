@@ -32,10 +32,17 @@ def enable_plotly_in_cell():
 
 
 class InteractiveHistogram:
-    def __init__(self, df, title="EIG Distribution", n_bins=20, bar_color="#EBF38B"):
+    colors = ['#16D5C2',  # Keppel
+              '#16425B',  # Indigo
+              '#EBF38B',  # Key Lime
+              '#0000000',  # Black
+              ]
+    def __init__(self, df, title="EIG Distribution", n_bins=20, bar_color=None):
         self.df = self.interpret_df(df)
         self.title = title
         self.n_bins = n_bins
+        if bar_color is None:
+            bar_color = self.colors[1]
         self.bar_color = bar_color
         self.fig = None
         self.plot()
