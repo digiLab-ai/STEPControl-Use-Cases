@@ -7,6 +7,12 @@ import numpy as np
 import h5py
 import pandas as pd
 
+import IPython
+from plotly.offline import init_notebook_mode
+import plotly.graph_objects as go
+from scipy.stats import norm
+import seaborn as sns
+
 
 def tokamak_plasma_cross_section(R0=0.48, a=0.3, kappa=1.5, delta=0.3, num_points=200):
     """
@@ -213,7 +219,7 @@ class LOSPlotter:
             plt.show()
             plt.close()
 
-    def display_plot(self, selected_lines=None):
+    def display_plot(self, selected_lines=None, print_str=None):
         if selected_lines is None:
             selected_lines = list(self.sensor_df.columns)
         slider = IntSlider(
@@ -234,7 +240,7 @@ class LOSPlotter:
         controls = HBox([play, slider])
 
         # Make the interactive plot link and return
-        out = interactive_output(self.plot_los, {'run': slider, 'selected_lines': fixed(selected_lines)})
+        out = interactive_output(self.plot_los, {'run': slider, 'selected_lines': fixed(selected_lines)}, 'print_str': fixed(print_str))
 
         # Display the combined controls and the output
         display(VBox([controls, out]))
@@ -303,3 +309,92 @@ class LOSPlotter:
             state_coords = state_coords[0], state_coords[1][valid_z]
             states = states[:, valid_z, :]
         return states, state_coords
+
+
+
+
+class InteractiveHistogram:
+    colors = ['#16D5C2',  # Keppel
+              '#16425B',  # Indigo
+              '#EBF38B',  # Key Lime
+              '#0000000',  # Black
+              ]
+    def __init__(self, df, title="EIG Distribution", n_bins=20, bar_color=None):
+        self.df = self.interpret_df(df)
+        self.title = title
+        self.n_bins = n_bins
+        if bar_color is None:
+            bar_color = self.colors[1]
+        self.bar_color = bar_color
+        self.fig = None
+        self.plot()
+
+    def interpret_df(self, df):
+
+        # Sample DataFrame with continuous values
+        return pd.DataFrame(
+            {"Sets": df.keys(), "value": [df[k]["mean_score"] for k in df.keys()]}
+        )
+
+    def process_data(self):
+        # Define bins
+        bin_size = (self.df["value"].max() - self.df["value"].min()) / self.n_bins
+        bin_edges = np.arange(
+            self.df["value"].min(), self.df["value"].max() + bin_size, bin_size
+        )
+        bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+
+        # Assign values to bins
+        self.df["EIG"] = pd.cut(self.df["value"], bins=bin_edges, right=False)
+
+        # Group by bins and concatenate names
+        df_grouped = (
+            self.df.groupby("EIG")
+            .agg({"value": "count", "Sets": lambda x: ", ".join(x)})
+            .reset_index()
+        )
+
+        df_grouped["EIG"] = df_grouped["EIG"].astype(
+            str
+        )  # Convert bins to string for display
+        df_grouped["Frequency"] = df_grouped["value"]
+
+        # Create hover text
+        hover_texts = [
+            f"EIG range: [{round(bin_edges[i], 2)}, {round(bin_edges[i+1], 2)})<br>Sets: {row_name}"
+            for i, row_name in enumerate(df_grouped["Sets"].values)
+        ]
+
+        return (
+            bin_centers,
+            df_grouped["Frequency"].values,
+            hover_texts,
+            np.diff(bin_edges),
+        )
+
+    def plot(self):
+        bin_centers, bin_counts, hover_texts, bin_widths = self.process_data()
+
+        fig = go.Figure()
+        fig.add_trace(
+            go.Bar(
+                x=bin_centers,  # Continuous x-axis
+                y=bin_counts,
+                hoverinfo="text",
+                hovertext=hover_texts,
+                width=bin_widths,  # Bin widths
+                marker=dict(color=self.bar_color, line=dict(width=1, color="black")),
+            )
+        )
+
+        # Update layout
+        fig.update_layout(
+            title=self.title,
+            xaxis_title="Expected Information Gain (higher is better)",
+            yaxis_title="Frequency",
+            xaxis=dict(tickmode="linear"),
+            bargap=0,  # No gaps between bins
+        )
+
+        self.fig = fig
+        fig.show()
