@@ -331,7 +331,7 @@ class LOSPlotter:
         )
 
         # Display the combined controls and the output
-        display(VBox([checkbox_container, controls, out]))
+        display(VBox([controls, checkbox_container, out]))
         return self.output
 
     def interpret_state_nc(self, state_nc_fn, z_lim=(-0.7, 0.7)):
