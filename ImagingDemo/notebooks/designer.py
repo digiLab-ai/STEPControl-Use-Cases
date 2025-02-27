@@ -51,7 +51,6 @@ class Designer:
         response = self.client.run_node(builder)
 
         self.designer = response["output"]["sensor_designer"]
-        self.visualize_score_distribution = self.visualise_score_distribution_dg
 
 
     def suggest(self, num_sensors: int, num_eval: int):
@@ -266,6 +265,8 @@ class Designer:
                 continue
             InteractiveHistogram(df=self.designer["bed"]["cache"][objective])
 
+    visualise_score_distribution = visualise_score_distribution_dg
+    visualize_score_distribution = visualise_score_distribution_dg
     
     def visualise_posterior(
         self,
