@@ -1,6 +1,8 @@
+# @title Click ▶️ to import packages
 from itertools import combinations
 from typing import Optional, Union
 import warnings
+import gdown
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -10,7 +12,7 @@ from uncertainty_engine.nodes.sensor_designer import (
     ScoreSensorDesign,
     SuggestSensorDesign,
 )
-from ImagingDemo.notebooks.utils_old import LOSPlotter
+from ImagingDemo.notebooks.utils import LOSPlotter
 import IPython
 from plotly.offline import init_notebook_mode
 import plotly.graph_objects as go
@@ -20,6 +22,7 @@ import seaborn as sns
 # Interactive plot imports
 from ipywidgets import (
     IntSlider,
+    Output,
     interactive_output,
     VBox,
     HBox,
@@ -28,6 +31,95 @@ from ipywidgets import (
     fixed,
 )
 from IPython.display import display
+
+
+# def enable_plotly_in_cell():
+#     display(
+#         IPython.core.display.HTML(
+#             """<script src="/static/components/requirejs/require.js"></script>"""
+#         )
+#     )
+#     init_notebook_mode(connected=False)
+
+
+# class InteractiveHistogram:
+#     def __init__(self, df, title="EIG Distribution", n_bins=20, bar_color="#EBF38B"):
+#         self.df = self.interpret_df(df)
+#         self.title = title
+#         self.n_bins = n_bins
+#         self.bar_color = bar_color
+#         self.fig = None
+#         self.plot()
+
+#     def interpret_df(self, df):
+
+#         # Sample DataFrame with continuous values
+#         return pd.DataFrame(
+#             {"Sets": df.keys(), "value": [df[k]["mean_score"] for k in df.keys()]}
+#         )
+
+#     def process_data(self):
+#         # Define bins
+#         bin_size = (self.df["value"].max() - self.df["value"].min()) / self.n_bins
+#         bin_edges = np.arange(
+#             self.df["value"].min(), self.df["value"].max() + bin_size, bin_size
+#         )
+#         bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+
+#         # Assign values to bins
+#         self.df["EIG"] = pd.cut(self.df["value"], bins=bin_edges, right=False)
+
+#         # Group by bins and concatenate names
+#         df_grouped = (
+#             self.df.groupby("EIG")
+#             .agg({"value": "count", "Sets": lambda x: ", ".join(x)})
+#             .reset_index()
+#         )
+
+#         df_grouped["EIG"] = df_grouped["EIG"].astype(
+#             str
+#         )  # Convert bins to string for display
+#         df_grouped["Frequency"] = df_grouped["value"]
+
+#         # Create hover text
+#         hover_texts = [
+#             f"EIG range: [{round(bin_edges[i], 2)}, {round(bin_edges[i+1], 2)})<br>Sets: {row_name}"
+#             for i, row_name in enumerate(df_grouped["Sets"].values)
+#         ]
+
+#         return (
+#             bin_centers,
+#             df_grouped["Frequency"].values,
+#             hover_texts,
+#             np.diff(bin_edges),
+#         )
+
+#     def plot(self):
+#         bin_centers, bin_counts, hover_texts, bin_widths = self.process_data()
+
+#         fig = go.Figure()
+#         fig.add_trace(
+#             go.Bar(
+#                 x=bin_centers,  # Continuous x-axis
+#                 y=bin_counts,
+#                 hoverinfo="text",
+#                 hovertext=hover_texts,
+#                 width=bin_widths,  # Bin widths
+#                 marker=dict(color=self.bar_color, line=dict(width=1, color="black")),
+#             )
+#         )
+
+#         # Update layout
+#         fig.update_layout(
+#             title=self.title,
+#             xaxis_title="Expected Information Gain (higher is better)",
+#             yaxis_title="Frequency",
+#             xaxis=dict(tickmode="linear"),
+#             bargap=0,  # No gaps between bins
+#         )
+
+#         self.fig = fig
+#         fig.show()
 
 
 class Designer:
