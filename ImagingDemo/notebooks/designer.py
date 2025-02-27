@@ -234,6 +234,10 @@ class Designer:
         self.designer = response["output"]["sensor_designer"]
 
         return response["output"]["score"]
+    
+    def score_design(self, design: list):
+        raw_score = self.score(design)
+        print(f"EIG for {design}: {raw_score:.2f}")
 
     def redundancy_analysis(
         self, designs: list, num_dropout: list = [1], objective="Exact", num_iter=1

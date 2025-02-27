@@ -27,15 +27,6 @@ from scipy.stats import norm
 import seaborn as sns
 
 
-def refactor_csv(csv_path):
-    df = pd.read_csv(csv_path)
-
-    # Rename columns
-    df.columns = [col.replace("LOS_0", "LoS") for col in df.columns]
-
-    # Save the modified CSV
-    df.to_csv(csv_path, index=False)
-
 
 def tokamak_plasma_cross_section(R0=0.48, a=0.3, kappa=1.5, delta=0.3, num_points=200):
     """
