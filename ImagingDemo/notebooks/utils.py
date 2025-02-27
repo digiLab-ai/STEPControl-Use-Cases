@@ -1,15 +1,11 @@
 from ipywidgets import (
     IntSlider,
     Output,
-    interact,
     interactive_output,
-    SelectMultiple,
     fixed,
     Checkbox,
     VBox,
     HBox,
-    Combobox,
-    HTML,
     Play,
     jslink,
 )
@@ -19,7 +15,7 @@ import numpy as np
 import h5py
 import pandas as pd
 
-import IPython
+
 from plotly.offline import init_notebook_mode
 import plotly.graph_objects as go
 from scipy.stats import norm

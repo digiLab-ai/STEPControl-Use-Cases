@@ -1,4 +1,3 @@
-# @title Click ▶️ to import packages
 from itertools import combinations
 from typing import Optional, Union
 import warnings
@@ -12,7 +11,6 @@ from uncertainty_engine.nodes.sensor_designer import (
     SuggestSensorDesign,
 )
 from utils import LOSPlotter, InteractiveHistogram
-import IPython
 from plotly.offline import init_notebook_mode
 import plotly.graph_objects as go
 from scipy.stats import norm
