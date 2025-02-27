@@ -2,7 +2,6 @@
 from itertools import combinations
 from typing import Optional, Union
 import warnings
-import gdown
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -12,7 +11,7 @@ from uncertainty_engine.nodes.sensor_designer import (
     ScoreSensorDesign,
     SuggestSensorDesign,
 )
-from ImagingDemo.notebooks.utils import LOSPlotter
+from utils import LOSPlotter
 import IPython
 from plotly.offline import init_notebook_mode
 import plotly.graph_objects as go
@@ -22,7 +21,6 @@ import seaborn as sns
 # Interactive plot imports
 from ipywidgets import (
     IntSlider,
-    Output,
     interactive_output,
     VBox,
     HBox,
