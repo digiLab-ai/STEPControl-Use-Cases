@@ -28,7 +28,11 @@ from ipywidgets import (
     jslink,
     fixed,
 )
-from IPython.display import display
+import sys
+
+# Check if running in Google Colab
+if "google.colab" not in sys.modules:
+    from IPython.display import display
 
 
 # def enable_plotly_in_cell():

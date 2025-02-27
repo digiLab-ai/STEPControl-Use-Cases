@@ -13,7 +13,6 @@ from ipywidgets import (
     Play,
     jslink,
 )
-from IPython.display import display
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import numpy as np
@@ -26,6 +25,11 @@ import plotly.graph_objects as go
 from scipy.stats import norm
 import seaborn as sns
 
+import sys
+
+# Check if running in Google Colab
+if "google.colab" not in sys.modules:
+    from IPython.display import display
 
 
 def tokamak_plasma_cross_section(R0=0.48, a=0.3, kappa=1.5, delta=0.3, num_points=200):
