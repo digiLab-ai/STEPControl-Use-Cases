@@ -123,7 +123,7 @@ class LOSPlotter:
                 3,
                 figsize=(10, 6),
                 gridspec_kw={"width_ratios": [0.05, 1, 0.05]},
-                dpi=150,
+                dpi=100,
             )
 
             # Extract the axes
