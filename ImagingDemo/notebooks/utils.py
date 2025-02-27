@@ -1,5 +1,18 @@
-
-from ipywidgets import IntSlider, Output, interact, interactive_output, SelectMultiple, fixed, Checkbox, VBox, HBox, Combobox, HTML, Play, jslink
+from ipywidgets import (
+    IntSlider,
+    Output,
+    interact,
+    interactive_output,
+    SelectMultiple,
+    fixed,
+    Checkbox,
+    VBox,
+    HBox,
+    Combobox,
+    HTML,
+    Play,
+    jslink,
+)
 from IPython.display import display
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
@@ -12,6 +25,7 @@ from plotly.offline import init_notebook_mode
 import plotly.graph_objects as go
 from scipy.stats import norm
 import seaborn as sns
+
 
 def refactor_csv(csv_path):
     df = pd.read_csv(csv_path)
@@ -68,8 +82,8 @@ class LOSPlotter:
         self.plasma_states, self.plasma_coords = self.interpret_state_nc(
             plasma_nc_filename
         )
-        self.z_eff_ave = self.qoi_df['Z_eff_ave']
-        self.z_eff_max = self.qoi_df['Z_eff_max']
+        # self.z_eff_ave = self.qoi_df["Z_eff_ave"]
+        # self.z_eff_max = self.qoi_df["Z_eff_max"]
 
         self.values = sensor_df.values
         self.n_rows = len(self.values)
@@ -95,12 +109,16 @@ class LOSPlotter:
     def __call__(self):
         self.display_interactive_plot()
 
-    def plot_los(self, selected_lines=None, run=0, print_str=None, **kwargs):
+    def plot_los(
+        self, selected_lines=None, run=0, print_str=None, interacted=False, **kwargs
+    ):
         if selected_lines is None:
             selected_lines = [k for k, v in kwargs.items() if v]
 
-        selected_inds = [self.sensor_df.columns.get_loc(col) for col in selected_lines]
+        if interacted:
+            self.chosen_design = selected_lines
 
+        selected_inds = [self.sensor_df.columns.get_loc(col) for col in selected_lines]
 
         num_lines = len(selected_inds)
         self.colours = self.cmap(self.norm(self.values[run]))
@@ -110,7 +128,11 @@ class LOSPlotter:
 
             # Create figure with GridSpec to control layout
             fig, axs = plt.subplots(
-                1, 3, figsize=(10, 6), gridspec_kw={"width_ratios": [0.05, 1, 0.05]}, dpi=150
+                1,
+                3,
+                figsize=(10, 6),
+                gridspec_kw={"width_ratios": [0.05, 1, 0.05]},
+                dpi=150,
             )
 
             # Extract the axes
@@ -130,7 +152,7 @@ class LOSPlotter:
             # Determine indices for labeling (first, middle, last)
             label_indices = [0, num_lines // 2, num_lines - 1][:num_lines]
             for i, j in enumerate([selected_inds[i] for i in label_indices]):
-                sf = 0.05 + (i/len(label_indices)) * 0.1
+                sf = 0.05 + (i / len(label_indices)) * 0.1
                 ax.text(
                     self.end_R[j] + sf * (self.end_R[j] - self.origin_R[j]),
                     self.end_z[j] + sf * (self.end_z[j] - self.origin_R[j]),
@@ -144,7 +166,8 @@ class LOSPlotter:
             ax.text(
                 -0.6,
                 0.6,
-                "$\\langle Z_{\\mathrm{eff.}} \\rangle$ = " + f"{self.z_eff_ave[run]:.1f}",
+                "$\\langle Z_{\\mathrm{eff.}} \\rangle$ = "
+                + f"{(np.mean(self.qoi_df.iloc[run].values)):.1f}",
                 fontsize=12,
                 ha="center",
                 va="center",
@@ -152,7 +175,8 @@ class LOSPlotter:
             ax.text(
                 -0.6,
                 -0.6,
-                "$Z_{\\mathrm{eff., max}}$ = " + f"{self.z_eff_max[run]:.1f}",
+                "$Z_{\\mathrm{eff., max}}$ = "
+                + f"{(np.max(self.qoi_df.iloc[run].values)):.1f}",
                 fontsize=12,
                 ha="center",
                 va="center",
@@ -238,18 +262,26 @@ class LOSPlotter:
             interval=50,
             value=0,
             min=0,
-            max=self.n_rows-1,
+            max=self.n_rows - 1,
             step=1,
             description="Press play",
             disabled=False,
-            repeat=True
+            repeat=True,
         )
         # Link the play button to the slider
-        jslink((play, 'value'), (slider, 'value'))
+        jslink((play, "value"), (slider, "value"))
         controls = HBox([play, slider])
 
         # Make the interactive plot link and return
-        out = interactive_output(self.plot_los, {'run': slider, 'selected_lines': fixed(selected_lines), 'print_str': fixed(print_str)})
+        out = interactive_output(
+            self.plot_los,
+            {
+                "run": slider,
+                "selected_lines": fixed(selected_lines),
+                "print_str": fixed(print_str),
+                "interacted": fixed(False),
+            },
+        )
 
         # Display the combined controls and the output
         display(VBox([controls, out]))
@@ -264,7 +296,6 @@ class LOSPlotter:
         if isinstance(lines_of_sight[0], int):
             # It is an index list rather than specific reference to column_names
             lines_of_sight = [column_names[i] for i in lines_of_sight]
-        
         checkboxes = {
             option: Checkbox(
                 description=option,
@@ -275,10 +306,7 @@ class LOSPlotter:
         }
         row_size = 5
         rows = [
-            HBox(
-                list(checkboxes.values())[i:i+row_size],
-                width="80px"
-            )
+            HBox(list(checkboxes.values())[i : i + row_size], width="80px")
             for i in range(0, len(column_names), row_size)
         ]
 
@@ -288,21 +316,28 @@ class LOSPlotter:
             min=0, max=len(self.sensor_df) - 1, step=1, value=0, continuous_update=True
         )
         play = Play(
-
             interval=50,
             value=0,
             min=0,
-            max=self.n_rows-1,
+            max=self.n_rows - 1,
             step=1,
             description="Press play",
             disabled=False,
-            repeat=True
+            repeat=True,
         )
         # Link the play button to the slider
-        jslink((play, 'value'), (slider, 'value'))
+        jslink((play, "value"), (slider, "value"))
         controls = HBox([play, slider])
 
-        out = interactive_output(self.plot_los, {'run': slider, 'print_str': fixed(None), **checkboxes})
+        out = interactive_output(
+            self.plot_los,
+            {
+                "run": slider,
+                "print_str": fixed(None),
+                "interacted": fixed(True),
+                **checkboxes,
+            },
+        )
 
         # Display the combined controls and the output
         display(VBox([checkbox_container, controls, out]))
@@ -320,15 +355,17 @@ class LOSPlotter:
         return states, state_coords
 
 
-
-
 class InteractiveHistogram:
-    colors = ['#16D5C2',  # Keppel
-              '#16425B',  # Indigo
-              '#EBF38B',  # Key Lime
-              '#0000000',  # Black
-              ]
-    def __init__(self, df, title="EIG Distribution of all Design Sets", n_bins=20, bar_color=None):
+    colors = [
+        "#16D5C2",  # Keppel
+        "#16425B",  # Indigo
+        "#EBF38B",  # Key Lime
+        "#0000000",  # Black
+    ]
+
+    def __init__(
+        self, df, title="EIG Distribution of all Design Sets", n_bins=20, bar_color=None
+    ):
         self.df = self.interpret_df(df)
         self.title = title
         self.n_bins = n_bins
@@ -403,7 +440,7 @@ class InteractiveHistogram:
             yaxis_title="Frequency",
             xaxis=dict(
                 tickmode="linear",
-                dtick=0.1  # Adjust this value to set the desired tick frequency
+                dtick=0.1,  # Adjust this value to set the desired tick frequency
             ),
             bargap=0,  # No gaps between bins
         )
