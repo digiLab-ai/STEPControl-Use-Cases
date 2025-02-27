@@ -11,7 +11,7 @@ from uncertainty_engine.nodes.sensor_designer import (
     ScoreSensorDesign,
     SuggestSensorDesign,
 )
-from utils import LOSPlotter
+from utils import LOSPlotter, InteractiveHistogram
 import IPython
 from plotly.offline import init_notebook_mode
 import plotly.graph_objects as go
@@ -378,18 +378,18 @@ class Designer:
                 plt.show()
                 plt.close()
 
+    def visualise_score_distribution_dg(self):
+        for objective in self.designer["bed"]["cache"].keys():
+            if len(self.designer["bed"]["cache"][objective]) == 0:
+                continue
+            # for design_key in list(self.designer["bed"]["cache"][objective].keys())[0]:
+            #     length = len(eval(design_key))
+            #     title = f"EIG Distribution for {objective} Objective Function (Design Length: {length})"
+            InteractiveHistogram(df=self.designer["bed"]["cache"][objective])
+
+    visualise_score_distribution = visualise_score_distribution_dg
+
     visualize_score_distribution = visualise_score_distribution
-
-    # def visualise_score_distribution_dg(self):
-    #     for objective in self.designer["bed"]["cache"].keys():
-    #         if len(self.designer["bed"]["cache"][objective]) == 0:
-    #             continue
-    #         # for design_key in list(self.designer["bed"]["cache"][objective].keys())[0]:
-    #         #     length = len(eval(design_key))
-    #         #     title = f"EIG Distribution for {objective} Objective Function (Design Length: {length})"
-    #         InteractiveHistogram(df=self.designer["bed"]["cache"][objective])
-
-    # visualize_score_distribution = visualise_score_distribution_dg
 
     def visualise_posterior(
         self, design: list, sigma: Optional[Union[float, list[float]]] = None
@@ -662,5 +662,5 @@ class Designer:
         return np.array(list(self.designer["bed"]["sensor_df"][0].keys()))[worst_ind]
 
     @property
-    def chosen_design(self):
-        return self.plotter.chosen_design
+    def chosen_design(self, lim_los=3):
+        return self.plotter.chosen_design[:lim_los]
