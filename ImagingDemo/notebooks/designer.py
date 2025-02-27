@@ -19,104 +19,6 @@ from scipy.stats import norm
 import seaborn as sns
 
 
-def enable_plotly_in_cell():
-    IPython.core.display.HTML(
-            """<script src="/static/components/requirejs/require.js"></script>"""
-        )
-    IPython.core.display(
-        IPython.core.display.HTML(
-            """<script src="/static/components/requirejs/require.js"></script>"""
-        )
-    )
-    init_notebook_mode(connected=False)
-
-
-# class InteractiveHistogram:
-#     colors = ['#16D5C2',  # Keppel
-#               '#16425B',  # Indigo
-#               '#EBF38B',  # Key Lime
-#               '#0000000',  # Black
-#               ]
-#     def __init__(self, df, title="EIG Distribution", n_bins=20, bar_color=None):
-#         self.df = self.interpret_df(df)
-#         self.title = title
-#         self.n_bins = n_bins
-#         if bar_color is None:
-#             bar_color = self.colors[1]
-#         self.bar_color = bar_color
-#         self.fig = None
-#         self.plot()
-
-#     def interpret_df(self, df):
-
-#         # Sample DataFrame with continuous values
-#         return pd.DataFrame(
-#             {"Sets": df.keys(), "value": [df[k]["mean_score"] for k in df.keys()]}
-#         )
-
-#     def process_data(self):
-#         # Define bins
-#         bin_size = (self.df["value"].max() - self.df["value"].min()) / self.n_bins
-#         bin_edges = np.arange(
-#             self.df["value"].min(), self.df["value"].max() + bin_size, bin_size
-#         )
-#         bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
-
-#         # Assign values to bins
-#         self.df["EIG"] = pd.cut(self.df["value"], bins=bin_edges, right=False)
-
-#         # Group by bins and concatenate names
-#         df_grouped = (
-#             self.df.groupby("EIG")
-#             .agg({"value": "count", "Sets": lambda x: ", ".join(x)})
-#             .reset_index()
-#         )
-
-#         df_grouped["EIG"] = df_grouped["EIG"].astype(
-#             str
-#         )  # Convert bins to string for display
-#         df_grouped["Frequency"] = df_grouped["value"]
-
-#         # Create hover text
-#         hover_texts = [
-#             f"EIG range: [{round(bin_edges[i], 2)}, {round(bin_edges[i+1], 2)})<br>Sets: {row_name}"
-#             for i, row_name in enumerate(df_grouped["Sets"].values)
-#         ]
-
-#         return (
-#             bin_centers,
-#             df_grouped["Frequency"].values,
-#             hover_texts,
-#             np.diff(bin_edges),
-#         )
-
-#     def plot(self):
-#         bin_centers, bin_counts, hover_texts, bin_widths = self.process_data()
-
-#         fig = go.Figure()
-#         fig.add_trace(
-#             go.Bar(
-#                 x=bin_centers,  # Continuous x-axis
-#                 y=bin_counts,
-#                 hoverinfo="text",
-#                 hovertext=hover_texts,
-#                 width=bin_widths,  # Bin widths
-#                 marker=dict(color=self.bar_color, line=dict(width=1, color="black")),
-#             )
-#         )
-
-#         # Update layout
-#         fig.update_layout(
-#             title=self.title,
-#             xaxis_title="Expected Information Gain (higher is better)",
-#             yaxis_title="Frequency",
-#             xaxis=dict(tickmode="linear"),
-#             bargap=0,  # No gaps between bins
-#         )
-
-#         self.fig = fig
-#         fig.show()
-
 
 class Designer:
     def __init__(
@@ -149,6 +51,8 @@ class Designer:
         response = self.client.run_node(builder)
 
         self.designer = response["output"]["sensor_designer"]
+        self.visualize_score_distribution = self.visualise_score_distribution_dg
+
 
     def suggest(self, num_sensors: int, num_eval: int):
         suggest_design = SuggestSensorDesign(
@@ -360,14 +264,9 @@ class Designer:
         for objective in self.designer["bed"]["cache"].keys():
             if len(self.designer["bed"]["cache"][objective]) == 0:
                 continue
-            # for design_key in list(self.designer["bed"]["cache"][objective].keys())[0]:
-            #     length = len(eval(design_key))
-            #     title = f"EIG Distribution for {objective} Objective Function (Design Length: {length})"
-            print(self.designer["bed"]["cache"][objective])
             InteractiveHistogram(df=self.designer["bed"]["cache"][objective])
 
-    visualize_score_distribution = visualise_score_distribution_dg
-
+    
     def visualise_posterior(
         self,
         design: list,
@@ -449,3 +348,32 @@ class Designer:
     def _log_likelihood(self, f, d, sigma):
         """Calculate the log likelihood of the model outputs."""
         return norm(loc=f, scale=sigma).logpdf(d).sum(axis=1)
+    
+    @property
+    def best_design(self):
+        best_ind = eval(
+            list(
+                dict(
+                    sorted(
+                        self.designer["bed"]["cache"]["Exact"].items(),
+                        key=lambda x: x[1]["mean_score"],
+                        reverse=True,
+                    )
+                ).keys()
+            )[0]
+        )
+        return np.array(list(self.designer["bed"]["sensor_df"][0].keys()))[best_ind]
+    
+    @property
+    def worst_design(self):
+        worst_ind = eval(
+            list(
+                dict(
+                    sorted(
+                        self.designer["bed"]["cache"]["Exact"].items(),
+                        key=lambda x: x[1]["mean_score"],
+                    )
+                ).keys()
+            )[0]
+        )
+        return np.array(list(self.designer["bed"]["sensor_df"][0].keys()))[worst_ind]

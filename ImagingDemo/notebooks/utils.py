@@ -319,7 +319,7 @@ class InteractiveHistogram:
               '#EBF38B',  # Key Lime
               '#0000000',  # Black
               ]
-    def __init__(self, df, title="EIG Distribution", n_bins=20, bar_color=None):
+    def __init__(self, df, title="EIG Distribution of all Design Sets", n_bins=20, bar_color=None):
         self.df = self.interpret_df(df)
         self.title = title
         self.n_bins = n_bins
@@ -392,7 +392,10 @@ class InteractiveHistogram:
             title=self.title,
             xaxis_title="Expected Information Gain (higher is better)",
             yaxis_title="Frequency",
-            xaxis=dict(tickmode="linear"),
+            xaxis=dict(
+                tickmode="linear",
+                dtick=0.1  # Adjust this value to set the desired tick frequency
+            ),
             bargap=0,  # No gaps between bins
         )
 
