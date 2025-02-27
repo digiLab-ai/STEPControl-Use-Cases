@@ -149,7 +149,9 @@ class Designer:
         )
 
         response = self.client.run_node(builder)
-
+        if response['status'] == 'FAILURE':
+            msg = response['error']['message']
+            raise ValueError(msg)
         self.designer = response["output"]["sensor_designer"]
 
     def visualise_data(self, selected_lines=None, print_str=None):
