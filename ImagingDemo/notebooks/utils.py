@@ -240,7 +240,7 @@ class LOSPlotter:
         controls = HBox([play, slider])
 
         # Make the interactive plot link and return
-        out = interactive_output(self.plot_los, {'run': slider, 'selected_lines': fixed(selected_lines)}, 'print_str': fixed(print_str))
+        out = interactive_output(self.plot_los, {'run': slider, 'selected_lines': fixed(selected_lines), 'print_str': fixed(print_str)})
 
         # Display the combined controls and the output
         display(VBox([controls, out]))
