@@ -206,7 +206,7 @@ class LOSPlotter:
             sm = plt.cm.ScalarMappable(cmap=self.cmap, norm=self.norm)
             sm.set_array([])
             cbar = plt.colorbar(sm, cax=cax_right, orientation="vertical")
-            cbar.set_label("Sensor (XRCS) Measurement [Wm$^{-2}$]")
+            cbar.set_label("Bolometry Measurement [Wm$^{-2}$]")
             cbar.ax.yaxis.set_major_formatter(ticker.ScalarFormatter(useMathText=True))
             cbar.ax.ticklabel_format(style="sci", axis="y", scilimits=(5, 5))
 
@@ -216,7 +216,7 @@ class LOSPlotter:
             cbar = plt.colorbar(im, cax=cax_left, orientation="vertical")
             cbar.ax.yaxis.set_ticks_position("left")
             cbar.ax.yaxis.set_label_position("left")
-            cbar.set_label("Plasma State [Wm$^{-3}$]")
+            cbar.set_label("Radiated Emission [Wm$^{-3}$]")
             cbar.ax.yaxis.set_major_formatter(ticker.ScalarFormatter(useMathText=True))
             cbar.ax.ticklabel_format(style="sci", axis="y", scilimits=(5, 5))
 
