@@ -386,7 +386,7 @@ class InteractiveHistogram:
 
         # Group by bins and concatenate names
         df_grouped = (
-            self.df.groupby("EIG")
+            self.df.groupby("EIG", observed=False)
             .agg({"value": "count", "Sets": lambda x: ", ".join(x)})
             .reset_index()
         )
