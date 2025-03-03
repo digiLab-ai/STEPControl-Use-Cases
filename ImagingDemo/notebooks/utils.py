@@ -74,8 +74,6 @@ class LOSPlotter:
         self.plasma_states, self.plasma_coords = self.interpret_state_nc(
             plasma_nc_filename
         )
-        # self.z_eff_ave = self.qoi_df["Z_eff_ave"]
-        # self.z_eff_max = self.qoi_df["Z_eff_max"]
 
         self.values = sensor_df.values
         self.n_rows = len(self.values)
