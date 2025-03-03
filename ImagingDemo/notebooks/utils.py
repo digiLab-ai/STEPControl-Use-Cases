@@ -283,7 +283,7 @@ class LOSPlotter:
         column_names = list(self.sensor_df.columns)
         if lines_of_sight is None:
             # Default to first 3
-            lines_of_sight = [0, 1, 2]
+            lines_of_sight = [0, 1, 2, 3]
         if isinstance(lines_of_sight[0], int):
             # It is an index list rather than specific reference to column_names
             lines_of_sight = [column_names[i] for i in lines_of_sight]

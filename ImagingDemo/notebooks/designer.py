@@ -668,5 +668,5 @@ class Designer:
         return np.array(list(self.designer["bed"]["sensor_df"][0].keys()))[worst_ind]
 
     @property
-    def chosen_design(self, lim_los=3):
+    def chosen_design(self, lim_los=4):
         return self.plotter.chosen_design[:lim_los]
