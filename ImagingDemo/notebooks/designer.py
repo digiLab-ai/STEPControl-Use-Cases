@@ -25,6 +25,7 @@ from ipywidgets import (
     Play,
     jslink,
     fixed,
+    HTML,
 )
 import sys
 
@@ -400,6 +401,7 @@ class Designer:
     def visualise_posterior(
         self, design: list, sigma: Optional[Union[float, list[float]]] = None
     ):
+        is_play_button = False
         # If sigma is not specified, use the default value
         if sigma is None:
             sigma = self.sigma
@@ -433,8 +435,7 @@ class Designer:
             interim[interim < 0] = 0
             stds[i] = np.sqrt(interim)
 
-        print(f"Average Relative Uncertainty = {np.mean(stds / means):.5f}")
-
+        print(f"Average Percentage Uncertainty = {np.mean(stds / means)*100.:.2f}%")
         # Plot the posterior
         slider = IntSlider(
             min=0,
@@ -443,20 +444,24 @@ class Designer:
             value=0,
             continuous_update=True,
         )
-        play = Play(
-            interval=50,
-            value=0,
-            min=0,
-            max=len(self.observables) - 1,
-            step=1,
-            description="Press play",
-            disabled=False,
-            repeat=True,
-        )
+        if is_play_button:
+            play = Play(
+                interval=50,
+                value=0,
+                min=0,
+                max=len(self.observables) - 1,
+                step=1,
+                description="Press play",
+                disabled=False,
+                repeat=True,
+            )
 
-        # Link the play button to the slider
-        jslink((play, "value"), (slider, "value"))
-        controls = HBox([play, slider])
+            # Link the play button to the slider
+            jslink((play, "value"), (slider, "value"))
+            controls = HBox([play, slider])
+        else:
+            html_content = HTML(value="<p>Plasma State: </p>")
+            controls = HBox([html_content, slider])
 
         # Make the interactive plot link and return
         out = interactive_output(
