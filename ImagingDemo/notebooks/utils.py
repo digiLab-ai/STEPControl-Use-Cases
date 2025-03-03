@@ -367,7 +367,7 @@ class InteractiveHistogram:
     ]
 
     def __init__(
-        self, df, title="EIG Distribution of all Design Sets", n_bins=20, bar_color=None
+        self, df, title="EIG Distribution of all Design Sets", n_bins=30, bar_color=None
     ):
         self.df = self.interpret_df(df)
         self.title = title
