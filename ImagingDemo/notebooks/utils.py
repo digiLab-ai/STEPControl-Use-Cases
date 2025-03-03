@@ -142,7 +142,7 @@ class LOSPlotter:
                 )
 
             # Determine indices for labeling (first, middle, last)
-            label_indices = [0, num_lines // 2, num_lines - 1][:num_lines]
+            label_indices = [0, num_lines // 3, 2 * (num_lines // 3), num_lines - 1][:num_lines]
             for i, j in enumerate([selected_inds[i] for i in label_indices]):
                 sf = 0.05 + (i / len(label_indices)) * 0.1
                 ax.text(
