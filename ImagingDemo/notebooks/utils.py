@@ -7,6 +7,7 @@ from ipywidgets import (
     VBox,
     HBox,
     Play,
+    HTML,
     jslink,
 )
 import matplotlib.pyplot as plt
@@ -244,24 +245,29 @@ class LOSPlotter:
             plt.close()
 
     def display_plot(self, selected_lines=None, print_str=None):
+        is_play_button = False
         if selected_lines is None:
             selected_lines = list(self.sensor_df.columns)
         slider = IntSlider(
             min=0, max=len(self.sensor_df) - 1, step=1, value=0, continuous_update=True
         )
-        play = Play(
-            interval=50,
-            value=0,
-            min=0,
-            max=self.n_rows - 1,
-            step=1,
-            description="Press play",
-            disabled=False,
-            repeat=True,
-        )
-        # Link the play button to the slider
-        jslink((play, "value"), (slider, "value"))
-        controls = HBox([play, slider])
+        if is_play_button:
+            play = Play(
+                interval=50,
+                value=0,
+                min=0,
+                max=self.n_rows - 1,
+                step=1,
+                description="Press play",
+                disabled=False,
+                repeat=True,
+            )
+            # Link the play button to the slider
+            jslink((play, "value"), (slider, "value"))
+            controls = HBox([play, slider])
+        else:
+            html_content = HTML(value="<p>Plasma State: </p>")
+            controls = HBox([html_content, slider])
 
         # Make the interactive plot link and return
         out = interactive_output(
@@ -280,6 +286,7 @@ class LOSPlotter:
         return self.output
 
     def display_interactive_plot(self, lines_of_sight=None):
+        is_play_button = False
         column_names = list(self.sensor_df.columns)
         if lines_of_sight is None:
             # Default to first 3
@@ -306,19 +313,26 @@ class LOSPlotter:
         slider = IntSlider(
             min=0, max=len(self.sensor_df) - 1, step=1, value=0, continuous_update=True
         )
-        play = Play(
-            interval=50,
-            value=0,
-            min=0,
-            max=self.n_rows - 1,
-            step=1,
-            description="Press play",
-            disabled=False,
-            repeat=True,
-        )
-        # Link the play button to the slider
-        jslink((play, "value"), (slider, "value"))
-        controls = HBox([play, slider])
+
+        
+        if is_play_button:
+            play = Play(
+                interval=50,
+                value=0,
+                min=0,
+                max=self.n_rows - 1,
+                step=1,
+                description="Press play",
+                disabled=False,
+                repeat=True,
+            )
+            # Link the play button to the slider
+            jslink((play, "value"), (slider, "value"))
+            
+            controls = HBox([play, slider])
+        else:
+            html_content = HTML(value="<p>Plasma State: </p>")
+            controls = HBox([html_content, slider])
 
         out = interactive_output(
             self.plot_los,
