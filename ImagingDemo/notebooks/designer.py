@@ -81,8 +81,8 @@ class Designer:
         return output
 
     def suggest(self, num_sensors: int, num_eval: int):
-        if num_eval > 100:
-            raise ValueError("This demo is limited to 100 evaluations")
+        if num_eval > 150:
+            raise ValueError("This demo is limited to 150 evaluations")
 
         suggest_design = SuggestSensorDesign(
             sensor_designer=self.designer,
