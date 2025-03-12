@@ -44,7 +44,7 @@ class Designer:
     ):
         self.client = Client(
             email=email,
-            deployment="https://13qg20i4yc.execute-api.eu-west-2.amazonaws.com/dev/api",
+            deployment="https://07y3pw9ud1.execute-api.eu-west-2.amazonaws.com/",
         )
 
         self.observables = observables
