@@ -10,12 +10,11 @@ from uncertainty_engine.nodes.sensor_designer import (
     ScoreSensorDesign,
     SuggestSensorDesign,
 )
-from utils import InteractiveHistogram
+from utils import LOSPlotter, InteractiveHistogram
 from plotly.offline import init_notebook_mode
 import plotly.graph_objects as go
 from scipy.stats import norm
 import seaborn as sns
-import json
 
 # Interactive plot imports
 from ipywidgets import (
@@ -35,19 +34,24 @@ if "google.colab" not in sys.modules:
     from IPython.display import display
 
 
+def exceeds_rounding_error(x, rtol=1e-6, atol=0, target_type='float16'):
+    x = np.asarray(x)
+    x_compressed = x.astype(target_type)
+    return np.abs(x - x_compressed) > (atol + rtol * np.abs(x))
+
 class Designer:
     def __init__(
         self,
         email: str,
         observables: pd.DataFrame,
         quantities_of_interest: Optional[pd.DataFrame] = None,
-        sigma: Optional[Union[float, list[float]]] = None,
+        sigma: Optional[Union[float, list[float]]] = None
     ):
         self.client = Client(
             email=email,
             deployment="https://07y3pw9ud1.execute-api.eu-west-2.amazonaws.com/",
         )
-
+        observables, quantities_of_interest = self.handle_data_size(observables, quantities_of_interest)
         self.observables = observables
         observables_dict = self.observables.to_dict(orient="list")
 
@@ -69,17 +73,48 @@ class Designer:
             raise ValueError(msg)
         self.designer = response["outputs"]["sensor_designer"]
 
-    # def visualise_data(self, selected_lines=None, print_str=None):
-    #     plotter = LOSPlotter(self.observables, qoi_df=self.quantities_of_interest)
-    #     output = plotter.display_plot(selected_lines, print_str)
-    #     return output
+    def handle_data_size(self, observables, quantities_of_interest):
 
-    # visualize_dataset = visualise_data
+        MAX_ALLOWANCE = 256000 # bytes
 
-    # def select_design(self):
-    #     self.plotter = LOSPlotter(self.observables, qoi_df=self.quantities_of_interest)
-    #     output = self.plotter.display_interactive_plot()
-    #     return output
+        size_bytes = observables.memory_usage(deep=True).sum()
+        if size_bytes > MAX_ALLOWANCE:
+            # check if it can simply be compressed
+            if not exceeds_rounding_error(observables, target_type='float32'):
+                observables = observables.astype('float32')
+                print('float32')
+            if not exceeds_rounding_error(observables, target_type='float16'):
+                observables = observables.astype('float16')
+                print('float16')
+
+        size_bytes = observables.memory_usage(deep=True).sum()
+        if size_bytes > MAX_ALLOWANCE:
+            # shrink number of rows if compression isn't sufficient
+            num_rows = len(observables)
+            byte_per_row = size_bytes / num_rows
+            n_rows_allowed = int(MAX_ALLOWANCE / byte_per_row) - 1
+            select_indices = np.random.choice(num_rows, size=n_rows_allowed, replace=True)
+
+            observables = observables[select_indices]
+            if quantities_of_interest is not None:
+                quantities_of_interest = quantities_of_interest[select_indices]
+            size_bytes = observables.memory_usage(deep=True).sum()
+
+        print(f"DataFrame size: {size_bytes} bytes")
+        return observables, quantities_of_interest
+
+
+    def visualise_data(self, selected_lines=None, print_str=None):
+        plotter = LOSPlotter(self.observables, qoi_df=self.quantities_of_interest)
+        output = plotter.display_plot(selected_lines, print_str)
+        return output
+
+    visualize_dataset = visualise_data
+
+    def select_design(self):
+        self.plotter = LOSPlotter(self.observables, qoi_df=self.quantities_of_interest)
+        output = self.plotter.display_interactive_plot()
+        return output
 
     def suggest(self, num_sensors: int, num_eval: int):
         if num_eval > 150:
@@ -275,135 +310,6 @@ class Designer:
     visualise_score_distribution = visualise_score_distribution_dg
 
     visualize_score_distribution = visualise_score_distribution
-
-    def visualise_posterior_heat_flux(
-        self, design: list, sigma: Optional[Union[float, list[float]]] = None, R_coords: Optional[np.ndarray] = None
-    ):
-        is_play_button = False
-        # If sigma is not specified, use the default value
-        if sigma is None:
-            sigma = self.sigma
-
-        # Calculate the likelihoods
-        data = self.observables.values
-        indices = [self.observables.columns.get_loc(sensor) for sensor in design]
-
-        # Set the sigma values for the chosen design
-        if isinstance(sigma, list):
-            design_sigma = (np.array(sigma)[list(sorted(set(indices)))]).tolist()
-        else:
-            design_sigma = sigma
-
-        sensor_data = data[:, indices]
-
-        # calculate the likelihoods
-        qois = list(self.quantities_of_interest.columns)
-        means = np.zeros((len(self.observables), len(qois)))
-        stds = np.zeros((len(self.observables), len(qois)))
-        for i in range(len(self.observables)):
-            sample_data = data[i, indices]
-            noise = norm(loc=0, scale=design_sigma).rvs(len(sample_data))
-            likelihood = np.exp(
-                self._log_likelihood(sensor_data, sample_data + noise, design_sigma)
-            )
-            likelihood /= likelihood.sum()
-            means[i] = np.dot(likelihood, self.quantities_of_interest.values)
-            expected_sqr = np.dot(likelihood, self.quantities_of_interest.values**2)
-            interim = expected_sqr - means[i] ** 2
-            interim[interim < 0] = 0
-            stds[i] = np.sqrt(interim)
-
-        print(f"Average Percentage Uncertainty = {np.mean(stds / means)*100.:.2f}%")
-        # Plot the posterior
-        slider = IntSlider(
-            min=0,
-            max=len(self.observables) - 1,
-            step=1,
-            value=0,
-            continuous_update=True,
-        )
-        if is_play_button:
-            play = Play(
-                interval=50,
-                value=0,
-                min=0,
-                max=len(self.observables) - 1,
-                step=1,
-                description="Press play",
-                disabled=False,
-                repeat=True,
-            )
-
-            # Link the play button to the slider
-            jslink((play, "value"), (slider, "value"))
-            controls = HBox([play, slider])
-        else:
-            html_content = HTML(value="<p>Plasma State: </p>")
-            controls = HBox([html_content, slider])
-
-        # Make the interactive plot link and return
-        out = interactive_output(
-            self.plot_heat_flux, {"run": slider, "means": fixed(means), "stds": fixed(stds), "R_coords": fixed(R_coords)}
-        )
-
-        # Display the combined controls and the output
-        display(VBox([controls, out]))
-
-    def plot_heat_flux(self, run, means, stds, R_coords):
-        mean = means[run]
-        std = stds[run]
-
-        # Assuming R coordinates are stored in your data
-        # You might need to adjust this based on your actual coordinate system
-        # r_coords = np.linspace(0, 1, len(mean))  # Replace with actual R coordinates if available
-
-        plt.figure(figsize=(10, 6))
-        
-        # Plot mean predicted heat flux
-        plt.plot(R_coords, mean, label="Predicted", color="#000000", linewidth=2)
-        
-        # Plot true heat flux values
-        plt.plot(
-            R_coords,
-            self.quantities_of_interest.iloc[run].values,
-            label="True",
-            linestyle="--",
-            color="#EBF38B",
-            linewidth=2
-        )
-        
-        # Plot uncertainty bands
-        plt.fill_between(
-            R_coords,
-            mean - 2 * std,
-            mean + 2 * std,
-            color="#8AA0AD",
-            alpha=0.3,
-            label=r"$2\sigma$ Confidence"
-        )
-        plt.fill_between(
-            R_coords,
-            mean - std,
-            mean + std,
-            color="#45687C",
-            alpha=0.4,
-            label=r"$1\sigma$ Confidence"
-        )
-
-        # Customize the plot
-        plt.xlabel("R Coordinate [m]")
-        plt.ylabel("Heat Flux [MW/m²]")
-        plt.title(f"Heat Flux Profile (State {run})")
-        
-        # Adjust legend
-        handles, labels = plt.gca().get_legend_handles_labels()
-        order = [1, 0, 3, 2]
-        plt.legend([handles[i] for i in order], [labels[i] for i in order])
-
-        plt.grid(True, alpha=0.3)
-        plt.savefig("./figures/heat_flux_posterior.png", dpi=300, bbox_inches="tight")
-        plt.show()
-        plt.close()
 
     def visualise_posterior(
         self, design: list, sigma: Optional[Union[float, list[float]]] = None
