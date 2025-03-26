@@ -37,7 +37,7 @@ if "google.colab" not in sys.modules:
 def exceeds_rounding_error(x, rtol=1e-6, atol=0, target_type='float16'):
     x = np.asarray(x)
     x_compressed = x.astype(target_type)
-    return np.abs(x - x_compressed) > (atol + rtol * np.abs(x))
+    return (np.abs(x - x_compressed) > (atol + rtol * np.abs(x))).any()
 
 class Designer:
     def __init__(
@@ -75,17 +75,15 @@ class Designer:
 
     def handle_data_size(self, observables, quantities_of_interest):
 
-        MAX_ALLOWANCE = 256000 # bytes
+        MAX_ALLOWANCE = 70000  # bytes
 
         size_bytes = observables.memory_usage(deep=True).sum()
         if size_bytes > MAX_ALLOWANCE:
             # check if it can simply be compressed
             if not exceeds_rounding_error(observables, target_type='float32'):
                 observables = observables.astype('float32')
-                print('float32')
             if not exceeds_rounding_error(observables, target_type='float16'):
                 observables = observables.astype('float16')
-                print('float16')
 
         size_bytes = observables.memory_usage(deep=True).sum()
         if size_bytes > MAX_ALLOWANCE:
@@ -94,13 +92,11 @@ class Designer:
             byte_per_row = size_bytes / num_rows
             n_rows_allowed = int(MAX_ALLOWANCE / byte_per_row) - 1
             select_indices = np.random.choice(num_rows, size=n_rows_allowed, replace=True)
-
-            observables = observables[select_indices]
+            observables = observables.iloc[select_indices]
             if quantities_of_interest is not None:
-                quantities_of_interest = quantities_of_interest[select_indices]
+                quantities_of_interest = quantities_of_interest.iloc[select_indices]
             size_bytes = observables.memory_usage(deep=True).sum()
 
-        print(f"DataFrame size: {size_bytes} bytes")
         return observables, quantities_of_interest
 
 
