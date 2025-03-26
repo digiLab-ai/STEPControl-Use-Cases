@@ -66,7 +66,7 @@ class Designer:
         if response['status'] == 'FAILURE':
             msg = response['error']['message']
             raise ValueError(msg)
-        self.designer = response["output"]["sensor_designer"]
+        self.designer = response["outputs"]["sensor_designer"]
 
     def visualise_data(self, selected_lines=None, print_str=None):
         plotter = LOSPlotter(self.observables, qoi_df=self.quantities_of_interest)
@@ -92,7 +92,7 @@ class Designer:
 
         response = self.client.run_node(suggest_design)
 
-        self.designer = response["output"]["sensor_designer"]
+        self.designer = response["outputs"]["sensor_designer"]
 
         if num_sensors >= 25:
             objective = "Exact"
@@ -106,7 +106,8 @@ class Designer:
             objective = "Exact"
 
         n_sensor_cache = {}
-        for k, v in self.designer["bed"]["cache"]["Exact"].items():
+        
+        for k, v in self.designer["bed"]["cache"][objective].items():
             if len(eval(k)) != num_sensors:
                 continue
             for sub_k, sub_v in v.items():
@@ -145,95 +146,95 @@ class Designer:
 
         response = self.client.run_node(score_design)
 
-        self.designer = response["output"]["sensor_designer"]
+        self.designer = response["outputs"]["sensor_designer"]
 
-        return response["output"]["score"]
+        return response["outputs"]["score"]
     
     def score_design(self, design: list):
         raw_score = self.score(design)
         print(f"EIG for {design}: {raw_score:.2f}")
 
-    def redundancy_analysis(
-        self, designs: list, num_dropout: list = [1], objective="Exact", num_iter=1
-    ):
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore")
-            for design in designs:
-                for length in len(design) - np.array(num_dropout):
-                    for combo in combinations(design, length):
-                        for _ in range(num_iter):
-                            self.score(list(combo))
+    # def redundancy_analysis(
+    #     self, designs: list, num_dropout: list = [1], objective="Exact", num_iter=1
+    # ):
+    #     with warnings.catch_warnings():
+    #         warnings.simplefilter("ignore")
+    #         for design in designs:
+    #             for length in len(design) - np.array(num_dropout):
+    #                 for combo in combinations(design, length):
+    #                     for _ in range(num_iter):
+    #                         self.score(list(combo))
 
-        redundancy_results = {}
-        for design in designs:
-            redundancy_results[str(design)] = {}
-            for length in len(design) - np.array(num_dropout):
-                length = int(length)
-                overall_mean = 0
-                means = []
-                vars = []
-                combs = list(combinations(design, length))
-                for combo in combs:
-                    sensor_ids = list(self.designer["bed"]["sensor_df"][0].keys())
-                    combo_inds = [sensor_ids.index(sensor) for sensor in combo]
-                    if (
-                        str(list(combo_inds))
-                        not in self.designer["bed"]["cache"][objective]
-                    ):
-                        continue
-                    means.append(
-                        self.designer["bed"]["cache"][objective][str(list(combo_inds))][
-                            "mean_score"
-                        ]
-                    )
-                    vars.append(
-                        self.designer["bed"]["cache"][objective][str(list(combo_inds))][
-                            "score_var"
-                        ]
-                    )
-                overall_mean = np.mean(means)
-                overall_var = np.var(means) + np.mean(vars)
-                redundancy_results[str(design)][length] = {
-                    "mean": overall_mean,
-                    "var": overall_var,
-                }
+    #     redundancy_results = {}
+    #     for design in designs:
+    #         redundancy_results[str(design)] = {}
+    #         for length in len(design) - np.array(num_dropout):
+    #             length = int(length)
+    #             overall_mean = 0
+    #             means = []
+    #             vars = []
+    #             combs = list(combinations(design, length))
+    #             for combo in combs:
+    #                 sensor_ids = list(self.designer["bed"]["sensor_df"][0].keys())
+    #                 combo_inds = [sensor_ids.index(sensor) for sensor in combo]
+    #                 if (
+    #                     str(list(combo_inds))
+    #                     not in self.designer["bed"]["cache"][objective]
+    #                 ):
+    #                     continue
+    #                 means.append(
+    #                     self.designer["bed"]["cache"][objective][str(list(combo_inds))][
+    #                         "mean_score"
+    #                     ]
+    #                 )
+    #                 vars.append(
+    #                     self.designer["bed"]["cache"][objective][str(list(combo_inds))][
+    #                         "score_var"
+    #                     ]
+    #                 )
+    #             overall_mean = np.mean(means)
+    #             overall_var = np.var(means) + np.mean(vars)
+    #             redundancy_results[str(design)][length] = {
+    #                 "mean": overall_mean,
+    #                 "var": overall_var,
+    #             }
 
-        for length in len(design) - np.array(num_dropout):
-            x_labels = list(redundancy_results.keys())
-            means = [value[length]["mean"] for value in redundancy_results.values()]
-            std_devs = [
-                np.sqrt(value[length]["var"]) for value in redundancy_results.values()
-            ]
-            x_indices = range((len(x_labels)))
+    #     for length in len(design) - np.array(num_dropout):
+    #         x_labels = list(redundancy_results.keys())
+    #         means = [value[length]["mean"] for value in redundancy_results.values()]
+    #         std_devs = [
+    #             np.sqrt(value[length]["var"]) for value in redundancy_results.values()
+    #         ]
+    #         x_indices = range((len(x_labels)))
 
-            # plt.figure(figsize=(10, 10))
-            fig, axs = plt.subplots(nrows=1, ncols=len(x_labels))
+    #         # plt.figure(figsize=(10, 10))
+    #         fig, axs = plt.subplots(nrows=1, ncols=len(x_labels))
 
-            # # Plot scatter points for the mean
-            # plt.scatter(x_indices, means, color="purple", label="Mean", zorder=3)
+    #         # # Plot scatter points for the mean
+    #         # plt.scatter(x_indices, means, color="purple", label="Mean", zorder=3)
 
-            # Plot error bars for 1st and 2nd standard deviations
-            for x, mean, std in zip(x_indices, means, std_devs):
-                output = LOSPlotter(self.observables)
+    #         # Plot error bars for 1st and 2nd standard deviations
+    #         for x, mean, std in zip(x_indices, means, std_devs):
+    #             output = LOSPlotter(self.observables)
 
-                sensor_inds = [sensor_ids.index(sensor) for sensor in eval(x_labels[x])]
-                mean_eig = self.designer["bed"]["cache"][objective][
-                    str(sorted(sensor_inds))
-                ]["mean_score"]
-                output.display_plot(
-                    eval(x_labels[x]),
-                    print_str="Full-set :{x_labels[x]}, EIG : {mean_eig}",
-                )
+    #             sensor_inds = [sensor_ids.index(sensor) for sensor in eval(x_labels[x])]
+    #             mean_eig = self.designer["bed"]["cache"][objective][
+    #                 str(sorted(sensor_inds))
+    #             ]["mean_score"]
+    #             output.display_plot(
+    #                 eval(x_labels[x]),
+    #                 print_str="Full-set :{x_labels[x]}, EIG : {mean_eig}",
+    #             )
 
-                combs = list(combinations(eval(x_labels[x]), length))
-                for combo in combs:
-                    sensor_inds = [sensor_ids.index(sensor) for sensor in combo]
-                    mean_eig = self.designer["bed"]["cache"][objective][
-                        str(sorted(sensor_inds))
-                    ]["mean_score"]
-                    output.display_plot(
-                        combo, print_str=f"Sub-set :{combo}, EIG : {mean_eig}"
-                    )
+    #             combs = list(combinations(eval(x_labels[x]), length))
+    #             for combo in combs:
+    #                 sensor_inds = [sensor_ids.index(sensor) for sensor in combo]
+    #                 mean_eig = self.designer["bed"]["cache"][objective][
+    #                     str(sorted(sensor_inds))
+    #                 ]["mean_score"]
+    #                 output.display_plot(
+    #                     combo, print_str=f"Sub-set :{combo}, EIG : {mean_eig}"
+    #                 )
 
     def visualise_score_distribution(self):
         for objective in self.designer["bed"]["cache"].keys():
