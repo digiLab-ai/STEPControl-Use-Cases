@@ -75,7 +75,7 @@ class Designer:
 
     def handle_data_size(self, observables, quantities_of_interest):
 
-        MAX_ALLOWANCE = 70000  # bytes
+        MAX_ALLOWANCE = 50000  # bytes
 
         size_bytes = observables.memory_usage(deep=True).sum()
         if size_bytes > MAX_ALLOWANCE:
