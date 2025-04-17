@@ -46,7 +46,7 @@ class Designer:
         observables: pd.DataFrame,
         quantities_of_interest: Optional[pd.DataFrame] = None,
         sigma: Optional[Union[float, list[float]]] = None,
-        max_data_allowance=50000  # in bytes
+        max_data_allowance=10000  # in bytes
     ):
         self.client = Client(
             email=email,
