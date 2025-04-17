@@ -45,13 +45,15 @@ class Designer:
         email: str,
         observables: pd.DataFrame,
         quantities_of_interest: Optional[pd.DataFrame] = None,
-        sigma: Optional[Union[float, list[float]]] = None
+        sigma: Optional[Union[float, list[float]]] = None,
+        max_data_allowance=None
     ):
         self.client = Client(
             email=email,
             deployment="https://07y3pw9ud1.execute-api.eu-west-2.amazonaws.com/",
         )
-        observables, quantities_of_interest = self.handle_data_size(observables, quantities_of_interest)
+        if max_data_allowance:
+            observables, quantities_of_interest = self.handle_data_size(observables, quantities_of_interest, max_data_allowance)
         self.observables = observables
         observables_dict = self.observables.to_dict(orient="list")
 
@@ -73,12 +75,11 @@ class Designer:
             raise ValueError(msg)
         self.designer = response["outputs"]["sensor_designer"]
 
-    def handle_data_size(self, observables, quantities_of_interest):
-
-        MAX_ALLOWANCE = 10000  # bytes
+    def handle_data_size(self, observables, quantities_of_interest, max_data_allowance):
+        # max_data_allowance is in bytes
 
         size_bytes = observables.memory_usage(deep=True).sum()
-        if size_bytes > MAX_ALLOWANCE:
+        if size_bytes > max_data_allowance:
             # check if it can simply be compressed
             if not exceeds_rounding_error(observables, target_type='float32'):
                 observables = observables.astype('float32')
@@ -86,11 +87,11 @@ class Designer:
                 observables = observables.astype('float16')
 
         size_bytes = observables.memory_usage(deep=True).sum()
-        if size_bytes > MAX_ALLOWANCE:
+        if size_bytes > max_data_allowance:
             # shrink number of rows if compression isn't sufficient
             num_rows = len(observables)
             byte_per_row = size_bytes / num_rows
-            n_rows_allowed = int(MAX_ALLOWANCE / byte_per_row) - 1
+            n_rows_allowed = int(max_data_allowance / byte_per_row) - 1
             select_indices = np.random.choice(num_rows, size=n_rows_allowed, replace=True)
             observables = observables.iloc[select_indices]
             if quantities_of_interest is not None:
